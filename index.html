@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<link rel="stylesheet" href="main.css">
+<script src="index.js" defer></script>
+<body>
+    <div class="wrap">
+        <input type="hidden" id="num" value="">
+        <input type="hidden" id="search-type" value="">
+        <h1>회원관리</h1>
+        <div class="insert-info">
+            <div>
+                <h2>회원 정보 입력</h2>
+            </div>
+            <table class="insert-table">
+                <colgroup>
+                    <col width="15%">
+                    <col width="85%">
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th>이름 :</th>
+                        <td><input type="text" id="name"></td>
+                    </tr>
+                    <tr>
+                        <th>나이 :</th>
+                        <td><input type="text" id="age"></td>
+                    </tr>
+                    <tr>
+                        <th>직업 :</th>
+                        <td><input type="text" id="job"></td>
+                    </tr>
+                    <tr>
+                        <th>이메일 :</th>
+                        <td><input type="text" id="email"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <button class="submit-btn" type="button">Insert</button>
+        </div>
+        <div class="insert-info list-info">
+            <div>
+                <h2>회원 명단 출력</h2>
+            </div>
+            <table class="list-table">
+                <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>이름</th>
+                        <th>나이</th>
+                        <th>직업</th>
+                        <th>이메일</th>
+                    </tr>
+                </thead>
+            </table>
+            <div class="body-tablebox">
+                <table id="table-count">
+                    <tbody id="target">
+                    </tbody>
+                </table>
+            </div>
+            <div class="search-box">
+                <div>count <span id="count-list"></span></div>
+                <select name="" id="" onchange="showValue(this);">
+                    <option value="선택">선택</option>
+                    <option value="name">이름</option>
+                    <option value="age">나이</option>
+                    <option value="job">직업</option>
+                    <option value="email">이메일</option>
+                </select>
+                <input type="text" id="search">
+                <button type="button" id="search-btn">Search</button>
+            </div>
+        </div>
+        <div id="del-pop">
+           
+        </div>
+    </div>
+</body>
+</html>
