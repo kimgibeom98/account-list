@@ -81,7 +81,6 @@ function postData(event) {
     const upemail = updateTr.querySelector('#up-email');
     event.target.style.display = "none";
     event.target.previousSibling .style.display = "block";
-
     fetch(`${requestURL}/${Number(patchNum)}`, {
       method: "PUT",
       headers: {
@@ -98,8 +97,8 @@ function postData(event) {
     .then((response) => response.json())
     .then((data) => {
       targetList.innerHTML = '';
-    getData();
-    alert("수정이 완료되었습니다.");
+      getData();
+      alert("수정이 완료되었습니다.");
     })
   }
 }
@@ -118,12 +117,14 @@ function findName(targetNum) {
 
 function deleteData(num) {
   delList.style.display = 'none';
-  dataJseon.open('DELETE', `${requestURL}/${num}`)
-  dataJseon.send();
-  dataJseon.onload = () => {
+  fetch(`${requestURL}/${num}`, {
+    method: "DELETE",
+  })
+  .then((response) => response.json())
+  .then((data) => {
     targetList.innerHTML = '';
     getData();
-  }
+  })
 }
 
 function showList(val) {
