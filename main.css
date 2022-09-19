@@ -25,15 +25,16 @@ h1{font-size: 35px; margin-bottom: 5px;}
 #target > tr > td:nth-of-type(4){width: 140px;}
 #target > tr > td:nth-of-type(5) input{width: 140px;}
 #target > tr > td:nth-of-type(5){width: 315px;}
-#target > tr > td input{border: none;}
+#target > tr > td input{border: 1px solid #fff;}
 #target > tr > td input:focus{outline: none;}
-#target > tr:nth-of-type(odd) td input{background-color: #f9f9f9;}
+#target > tr:nth-of-type(odd) td input{border: 1px solid #f9f9f9; background-color: #f9f9f9;}
 .list-table > thead tr th:first-of-type{width: 52.64px;}
 .list-table > thead tr th:nth-of-type(2){width: 120px;}
 .list-table > thead tr th:nth-of-type(3){width: 85px;}
 .list-table > thead tr th:nth-of-type(4){width: 155px;}
 .list-table > thead tr th:nth-of-type(5){width: 271.36px;}
 .button-box{display: flex; justify-content: space-between;}
+.button-box > div{display: flex;}
 .button-box > div button{border: 1px solid #e3e3e3; background-color: white; cursor: pointer; color: #333333;}
 .del-btn{margin-left: 5px;}
 .search-box{display: flex; margin: 20px 0 20px 10px}
@@ -49,4 +50,6 @@ h1{font-size: 35px; margin-bottom: 5px;}
 #del-pop > div{display: flex; justify-content: center;}
 #del-pop > div > button{border: 1px solid #e3e3e3; height: 25px; background-color: white; color: #333333; font-weight: 500; cursor: pointer; width: 54px;}
 #del-pop > div > button:last-of-type{margin-left: 5px;}
-.update-data{display: none;}
+.view-data,
+.up-data{display: none;}
+.correction-data{display: block;}
