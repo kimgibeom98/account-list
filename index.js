@@ -34,31 +34,29 @@ getData();
 
 function postData(event) {
   if (event.target.getAttribute('class') === 'submit-btn') {
-    fetch(requestURL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id: Number(targetCount.value),
-        name: tragetName.value,
-        age: Number(tragetAge.value),
-        job : targetJob.value,
-        email : tragetEmail.value
-      }),
-    })
-    .then((data) => data.json())
-    .then((data) => {
-      let email = tragetEmail.value;
-      if(!emailCheck(email)){
-        alert('email을 형식에 맞게 입력하세요.');
-      }else{
+    let email = tragetEmail.value;
+    if(!emailCheck(email)){
+      alert('email을 형식에 맞게 입력하세요.');
+    }else{
+      fetch(requestURL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: Number(targetCount.value),
+          name: tragetName.value,
+          age: Number(tragetAge.value),
+          job : targetJob.value,
+          email : tragetEmail.value
+        }),
+      })
+      .then((data) => data.json())
+      .then((data) => {
         targetList.innerHTML = '';
         getData();
-      }
-    });
-    
-
+      })
+    }
   } else if (event.target.id === 'search-btn') {
     event.preventDefault();
     const val = searchInput.value;
@@ -70,7 +68,6 @@ function postData(event) {
     const updateTr = event.target.parentNode.parentNode.parentNode.parentNode; 
     const updateInput = updateTr.querySelectorAll('input');
     const viewSpan = updateTr.querySelectorAll('.view-data');
-    console.log(viewSpan)
     // viewSpan.style.display = "none"
     for(let i = 0; i < updateInput.length; i++){
       updateInput[i].readOnly  = false;
