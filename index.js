@@ -67,8 +67,6 @@ function postData(event) {
     event.target.nextSibling.style.display = "block";
     const updateTr = event.target.parentNode.parentNode.parentNode.parentNode; 
     const updateInput = updateTr.querySelectorAll('input');
-    const viewSpan = updateTr.querySelectorAll('.view-data');
-    // viewSpan.style.display = "none"
     for(let i = 0; i < updateInput.length; i++){
       updateInput[i].readOnly  = false;
       updateInput[i].style.border ='1px solid #888',
@@ -83,14 +81,26 @@ function postData(event) {
     const upemail = updateTr.querySelector('#up-email');
     event.target.style.display = "none";
     event.target.previousSibling .style.display = "block";
-    dataJseon.open('PATCH', `${requestURL}/${Number(patchNum)}`);
-    dataJseon.setRequestHeader('content-type', 'application/json');
-    dataJseon.send(JSON.stringify({id: Number(targetCount.value), name: upName.value, age: Number(upAge.value), job: upJob.value, email: upemail.value }));
-    dataJseon.onload = () => {
+
+    fetch(`${requestURL}/${Number(patchNum)}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: Number(targetCount.value),
+        name : upName.value,
+        age : Number(upAge.value),
+        job : upJob.value,
+        email : upemail.value
+      }),
+    })
+    .then((response) => response.json())
+    .then((data) => {
       targetList.innerHTML = '';
-      getData();
-      alert("수정이 완료되었습니다.");
-    }
+    getData();
+    alert("수정이 완료되었습니다.");
+    })
   }
 }
 
