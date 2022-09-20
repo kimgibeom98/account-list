@@ -64,7 +64,6 @@ function postData(event) {
     const updateTr = event.target.parentNode.parentNode.parentNode.parentNode; 
     const updateInput = updateTr.querySelectorAll('input');
     const noneSpan = updateTr.querySelectorAll('.view-data');
-    console.log(noneSpan)
     for(let i = 0; i < updateInput.length; i++){
       noneSpan[i].style.display = "none"
       updateInput[i].style.display = "inline-block"
