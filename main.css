@@ -50,6 +50,8 @@ h1{font-size: 35px; margin-bottom: 5px;}
 #del-pop > div{display: flex; justify-content: center;}
 #del-pop > div > button{border: 1px solid #e3e3e3; height: 25px; background-color: white; color: #333333; font-weight: 500; cursor: pointer; width: 54px;}
 #del-pop > div > button:last-of-type{margin-left: 5px;}
-.view-data,
 .up-data{display: none;}
+.view-data,
 .correction-data{display: block;}
+.correction-input{display: none;}
+#reset-btn{margin-left: 5px;}
