@@ -63,7 +63,11 @@ function postData(event) {
     event.target.nextSibling.style.display = "block";
     const updateTr = event.target.parentNode.parentNode.parentNode.parentNode; 
     const updateInput = updateTr.querySelectorAll('input');
+    const noneSpan = updateTr.querySelectorAll('.view-data');
+    console.log(noneSpan)
     for(let i = 0; i < updateInput.length; i++){
+      noneSpan[i].style.display = "none"
+      updateInput[i].style.display = "inline-block"
       updateInput[i].readOnly  = false;
       updateInput[i].style.border ='1px solid #888',
       updateInput[i].style.background ='#fff'

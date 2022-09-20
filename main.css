@@ -14,17 +14,22 @@ h1{font-size: 35px; margin-bottom: 5px;}
 #target{max-height: 323px; overflow-y: auto; display: block;}
 
 #target > tr:nth-of-type(odd) td{background-color: #f9f9f9;}
-#target > tr > td{ vertical-align: middle; font-size: 15px; color: #333333; height: 30px; box-sizing: border-box; padding-left: 10px; text-align: left;}
-#target > tr > td:first-of-type > input,
-#target > tr > td:first-of-type{width: 70px;}
-#target > tr > td:nth-of-type(2) > input,
-#target > tr > td:nth-of-type(2){width: 105px;}
-#target > tr > td:nth-of-type(3) > input,
-#target > tr > td:nth-of-type(3){width: 70px;}
-#target > tr > td:nth-of-type(4) > input,
-#target > tr > td:nth-of-type(4){width: 140px;}
-#target > tr > td:nth-of-type(5) input{width: 140px;}
-#target > tr > td:nth-of-type(5){width: 315px;}
+#target > tr > td{ vertical-align: middle; font-size: 13px; color: #333333; height: 30px; box-sizing: border-box; padding-left: 10px; text-align: left;}
+#target > tr > td:first-of-type > span,
+#target > tr > td:first-of-type > input{width: 100%; font-size: 13px;}
+#target > tr > td:first-of-type{width: 81px; box-sizing: border-box;}
+#target > tr > td:nth-of-type(2) > span,
+#target > tr > td:nth-of-type(2) > input{width: 100%; font-size: 13px;}
+#target > tr > td:nth-of-type(2){width: 198px; box-sizing: border-box;}
+#target > tr > td:nth-of-type(3) > span,
+#target > tr > td:nth-of-type(3) > input{width: 100%; font-size: 13px;}
+#target > tr > td:nth-of-type(3){width: 115px; box-sizing: border-box;}
+#target > tr > td:nth-of-type(4) > span,
+#target > tr > td:nth-of-type(4) > input{width: 100%; font-size: 13px;}
+#target > tr > td:nth-of-type(4){width: 204px; box-sizing: border-box;}
+/* #target > tr > td:nth-of-type(5) span, */
+/* #target > tr > td:nth-of-type(5) input{width: 140px; box-sizing: border-box;} */
+#target > tr > td:nth-of-type(5){width: 300px;}
 #target > tr > td input{border: 1px solid #fff;}
 #target > tr > td input:focus{outline: none;}
 #target > tr:nth-of-type(odd) td input{border: 1px solid #f9f9f9; background-color: #f9f9f9;}
