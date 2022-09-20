@@ -9,10 +9,8 @@ const targetCount = document.getElementById('num');
 const countTable = document.getElementById('count-list');
 const listCount = document.getElementById('table-count');
 const searchInput = document.getElementById('search');
-const searchBtn = document.getElementById('search-btn');
 const searchType = document.getElementById('search-type');
 const list = document.getElementById('target');
-// let data;
 function getData() {
   fetch(requestURL)
     .then((data) => data.json())
@@ -61,7 +59,6 @@ function postData(event) {
     const val = searchInput.value;
     showList(val)
   }else if(event.target.getAttribute('class') === 'correction-data'){
-    console.log(event.target)
     event.target.style.display = "none";
     event.target.nextSibling.style.display = "block";
     const updateTr = event.target.parentNode.parentNode.parentNode.parentNode; 
@@ -94,11 +91,14 @@ function postData(event) {
       }),
     })
     .then((response) => response.json())
-    .then((data) => {
+    .then(() => {
       targetList.innerHTML = '';
       getData();
       alert("수정이 완료되었습니다.");
     })
+  }else if(event.target.id === 'reset-btn'){
+    targetList.innerHTML = '';
+    getData();
   }
 }
 
