@@ -131,39 +131,52 @@ function showList(val) {
   fetch(requestURL)
   .then((response) => response.json())
   .then((data) =>{
-    let k = 1;
-    for (let i = 0; i < data.length; i++) {
-      if (data.length - 1 === i) {
-        targetCount.value = Number(data[i].id) + 1;
-      }
-      const innerElement = `<tr><td data-index=${data[i].id}>${k}</td><td class="target-name${i}"><span class="view-data">${data[i].name}</span><input class="correction-input" id="up-name" type="text" readonly value="${data[i].name}"></td><td><span class="view-data">${data[i].age}</span><input class="correction-input" id="up-age" type="text" readonly value="${data[i].age}"></td><td><span class="view-data">${data[i].job}</span><input class="correction-input" id="up-job" type="text" readonly value="${data[i].job}"></td><td><div class="button-box"><span><span class="view-data">${data[i].email}</span><input class="correction-input" id="up-email" type="text" readonly value="${data[i].email}"></span><div><button class="correction-data" type="button">수정</button><button class="up-data" type="button">완료</button><button onclick="findName(${i});" type="button" class="del-btn">삭제</button></div></div></td></tr>`;
-        if(searchType.value === ""){
-          alert("분류를 선택하세요");
-          getData();
-          break;
-        }else if(searchType.value === "name"){
-          if(data[i].name.includes(val)){
-            targetList.innerHTML +=  innerElement
-            k++;
-          }
-        }else if(searchType.value === "email"){
-          if(data[i].email.includes(val)){
-            targetList.innerHTML +=  innerElement
-            k++;
-          }
-        }else if(searchType.value === "age"){
-          if(data[i].age === Number(val)){
-            targetList.innerHTML += innerElement
-            k++;
-          }
-        }else if(searchType.value === "job"){
-          if(data[i].job === val){
-            targetList.innerHTML +=  innerElement
-            k++;
+    try{
+      let k = 1;
+      for (let i = 0; i < data.length; i++) {
+        if (data.length - 1 === i) {
+          targetCount.value = Number(data[i].id) + 1;
+        }
+          if(searchType.value === ""){
+            alert("분류를 선택하세요");
+            getData();
+            return;
+          }else if(searchType.value === "name"){
+            if(data[i].name.includes(val)){
+              const name = data[i].name.replace(val,`<span style="color: blue;">${val}</span>`)
+              targetList.innerHTML += `<tr><td data-index=${data[i].id}>${k}</td><td class="target-name${i}"><span class="view-data">${name}</span><input class="correction-input" id="up-name" type="text" readonly value="${data[i].name}"></td><td><span class="view-data">${data[i].age}</span><input class="correction-input" id="up-age" type="text" readonly value="${data[i].age}"></td><td><span class="view-data">${data[i].job}</span><input class="correction-input" id="up-job" type="text" readonly value="${data[i].job}"></td><td><div class="button-box"><span><span class="view-data">${data[i].email}</span><input class="correction-input" id="up-email" type="text" readonly value="${data[i].email}"></span><div><button class="correction-data" type="button">수정</button><button class="up-data" type="button">완료</button><button onclick="findName(${i});" type="button" class="del-btn">삭제</button></div></div></td></tr>`;
+              k++;
+            }
+          }else if(searchType.value === "email"){
+            if(data[i].email.includes(val)){
+              const email = data[i].email.replace(val,`<span style="color: blue;">${val}</span>`)
+              targetList.innerHTML +=  `<tr><td data-index=${data[i].id}>${k}</td><td class="target-name${i}"><span class="view-data">${data[i].name}</span><input class="correction-input" id="up-name" type="text" readonly value="${data[i].name}"></td><td><span class="view-data">${data[i].age}</span><input class="correction-input" id="up-age" type="text" readonly value="${data[i].age}"></td><td><span class="view-data">${data[i].job}</span><input class="correction-input" id="up-job" type="text" readonly value="${data[i].job}"></td><td><div class="button-box"><span><span class="view-data">${email}</span><input class="correction-input" id="up-email" type="text" readonly value="${data[i].email}"></span><div><button class="correction-data" type="button">수정</button><button class="up-data" type="button">완료</button><button onclick="findName(${i});" type="button" class="del-btn">삭제</button></div></div></td></tr>`;
+              k++;
+            }
+          }else if(searchType.value === "age"){
+            if(data[i].age === Number(val)){
+              const stringVal = val.toString();
+              const age = data[i].age.toString().replace(stringVal,`<span style="color: blue;">${stringVal}</span>`)
+              targetList.innerHTML += `<tr><td data-index=${data[i].id}>${k}</td><td class="target-name${i}"><span class="view-data">${data[i].name}</span><input class="correction-input" id="up-name" type="text" readonly value="${data[i].name}"></td><td><span class="view-data">${age}</span><input class="correction-input" id="up-age" type="text" readonly value="${data[i].age}"></td><td><span class="view-data">${data[i].job}</span><input class="correction-input" id="up-job" type="text" readonly value="${data[i].job}"></td><td><div class="button-box"><span><span class="view-data">${data[i].email}</span><input class="correction-input" id="up-email" type="text" readonly value="${data[i].email}"></span><div><button class="correction-data" type="button">수정</button><button class="up-data" type="button">완료</button><button onclick="findName(${i});" type="button" class="del-btn">삭제</button></div></div></td></tr>`;
+              k++;
+            }
+          }else if(searchType.value === "job"){
+            if(data[i].job === val){
+              const job = data[i].job.replace(val,`<span style="color: blue;">${val}</span>`)
+              targetList.innerHTML += `<tr><td data-index=${data[i].id}>${k}</td><td class="target-name${i}"><span class="view-data">${data[i].name}</span><input class="correction-input" id="up-name" type="text" readonly value="${data[i].name}"></td><td><span class="view-data">${data[i].age}</span><input class="correction-input" id="up-age" type="text" readonly value="${data[i].age}"></td><td><span class="view-data">${job}</span><input class="correction-input" id="up-job" type="text" readonly value="${data[i].job}"></td><td><div class="button-box"><span><span class="view-data">${data[i].email}</span><input class="correction-input" id="up-email" type="text" readonly value="${data[i].email}"></span><div><button class="correction-data" type="button">수정</button><button class="up-data" type="button">완료</button><button onclick="findName(${i});" type="button" class="del-btn">삭제</button></div></div></td></tr>`;
+              k++;
+            }
           }
         }
+        if(listCount.rows.length === 0){
+          getData()
+          alert("회원이 존재하지 않습니다.");
+        }
+      } catch(err){
+        
       }
       countTable.innerHTML = listCount.rows.length;
+
   })
   }
 
