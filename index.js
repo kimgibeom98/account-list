@@ -18,7 +18,7 @@ async function getData() {
     })
     .then((data) => data.json())
     .then((data) => {
-      if(countTime === false){
+      if(!countTime()){
         alert('API 실행중 ERROR가 발생했습니다.');
       }
       let j = 1;
@@ -218,7 +218,7 @@ function countTime(){
       return false
     }
   }, 5000);
-
+  return true
 }
 
 function emailCheck(email) {
