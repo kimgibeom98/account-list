@@ -11,48 +11,58 @@ const listCount = document.getElementById('table-count');
 const searchInput = document.getElementById('search');
 const searchType = document.getElementById('search-type');
 const list = document.getElementById('target');
-function getData() {
-  fetch(requestURL)
+async function getData() {
+  try{
+    const res = await fetch(requestURL, {
+      method: 'GET',
+    })
     .then((data) => data.json())
-    .then(
-      (data) => {
-        let j = 1;
-        for (let i = 0; i < data.length; i++) {
-          if (data.length - 1 === i) {
-            targetCount.value = Number(data[i].id) + 1;
-          }
-          targetList.innerHTML += `<tr><td data-index=${data[i].id}>${j}</td><td class="target-name${i}"><span class="view-data">${data[i].name}</span><input class="correction-input" id="up-name" type="text" readonly value="${data[i].name}"></td><td><span class="view-data">${data[i].age}</span><input class="correction-input" id="up-age" type="text" readonly value="${data[i].age}"></td><td><span class="view-data">${data[i].job}</span><input class="correction-input" id="up-job" type="text" readonly value="${data[i].job}"></td><td><div class="button-box"><span><span class="view-data">${data[i].email}</span><input class="correction-input" id="up-email" type="text" readonly value="${data[i].email}"></span><div><button class="correction-data" type="button">수정</button><button class="up-data" type="button">완료</button><button onclick="findName(${i});" type="button" class="del-btn">삭제</button></div></div></td></tr>`;
-          j++;
+    .then((data) => {
+      let j = 1;
+      for (let i = 0; i < data.length; i++) {
+        if (data.length - 1 === i) {
+          targetCount.value = Number(data[i].id) + 1;
         }
-        countTable.innerHTML = listCount.rows.length;
-      });
+        targetList.innerHTML += `<tr><td data-index=${data[i].id}>${j}</td><td class="target-name${i}"><span class="view-data">${data[i].name}</span><input class="correction-input" id="up-name" type="text" readonly value="${data[i].name}"></td><td><span class="view-data">${data[i].age}</span><input class="correction-input" id="up-age" type="text" readonly value="${data[i].age}"></td><td><span class="view-data">${data[i].job}</span><input class="correction-input" id="up-job" type="text" readonly value="${data[i].job}"></td><td><div class="button-box"><span><span class="view-data">${data[i].email}</span><input class="correction-input" id="up-email" type="text" readonly value="${data[i].email}"></span><div><button class="correction-data" type="button">수정</button><button class="up-data" type="button">완료</button><button onclick="findName(${i});" type="button" class="del-btn">삭제</button></div></div></td></tr>`;
+        j++;
+      }
+      countTable.innerHTML = listCount.rows.length;
+    });
+  }catch{
+      alert("API 실행중 ERROR가 발생했습니다.");
+  }
+
 }
 getData();
 
-function postData(event) {
+async function postData(event) {
   if (event.target.getAttribute('class') === 'submit-btn') {
     let email = tragetEmail.value;
     if(!emailCheck(email)){
       alert('email을 형식에 맞게 입력하세요.');
     }else{
-      fetch(requestURL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id: Number(targetCount.value),
-          name: tragetName.value,
-          age: Number(tragetAge.value),
-          job : targetJob.value,
-          email : tragetEmail.value
-        }),
-      })
-      .then((data) => data.json())
-      .then((data) => {
-        targetList.innerHTML = '';
-        getData();
-      })
+      try{
+        const res = await fetch(requestURL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: Number(targetCount.value),
+            name: tragetName.value,
+            age: Number(tragetAge.value),
+            job : targetJob.value,
+            email : tragetEmail.value
+          }),
+        })
+        .then((data) => data.json())
+        .then(() => {
+          targetList.innerHTML = '';
+          getData();
+        })
+      }catch{
+        alert("API 실행중 ERROR가 발생했습니다.");
+      }
     }
   } else if (event.target.id === 'search-btn') {
     event.preventDefault();
@@ -80,28 +90,33 @@ function postData(event) {
     const upemail = updateTr.querySelector('#up-email');
     event.target.style.display = "none";
     event.target.previousSibling .style.display = "block";
-    fetch(`${requestURL}/${Number(patchNum)}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id: Number(targetCount.value),
-        name : upName.value,
-        age : Number(upAge.value),
-        job : upJob.value,
-        email : upemail.value
-      }),
-    })
-    .then((response) => response.json())
-    .then(() => {
-      targetList.innerHTML = '';
-      getData();
-      alert("수정이 완료되었습니다.");
-    })
+    try{
+      fetch(`${requestURL}/${Number(patchNum)}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: Number(targetCount.value),
+          name : upName.value,
+          age : Number(upAge.value),
+          job : upJob.value,
+          email : upemail.value
+        }),
+      })
+      .then((response) => response.json())
+      .then(() => {
+        targetList.innerHTML = '';
+        getData();
+        alert("수정이 완료되었습니다.");
+      })
+    }catch{
+      alert("API 실행중 ERROR가 발생했습니다.");
+    }
   }else if(event.target.id === 'reset-btn'){
     targetList.innerHTML = '';
     getData();
+    searchInput.value = '';
   }
 }
 
@@ -117,24 +132,30 @@ function findName(targetNum) {
   }
 }
 
-function deleteData(num) {
+async function deleteData(num) {
   delList.style.display = 'none';
-  fetch(`${requestURL}/${num}`, {
-    method: "DELETE",
-  })
-  .then((response) => response.json())
-  .then((data) => {
-    targetList.innerHTML = '';
-    getData();
-  })
+  try{
+    const res = await fetch(`${requestURL}/${num}`, {
+      method: "DELETE",
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      targetList.innerHTML = '';
+      getData();
+    })
+  }catch{
+    alert("API 실행중 ERROR가 발생했습니다.");
+  }
 }
 
-function showList(val) {
+async function showList(val) {
   list.innerHTML = '';
-  fetch(requestURL)
-  .then((response) => response.json())
-  .then((data) =>{
-    try{
+  try{
+    const res = await fetch(requestURL, {
+      method: 'GET',
+    })
+    .then((response) => response.json())
+    .then((data) =>{
       let k = 1;
       for (let i = 0; i < data.length; i++) {
         if (data.length - 1 === i) {
@@ -172,15 +193,16 @@ function showList(val) {
           }
         }
         if(listCount.rows.length === 0){
-          getData()
-          alert("회원이 존재하지 않습니다.");
+          throw new Error('회원이 존재하지 않습니다.');
         }
-      } catch(err){
-        
-      }
       countTable.innerHTML = listCount.rows.length;
-
-  })
+    })
+  }catch(err){
+    if(err instanceof Error){
+      alert("회원이 존재하지 않습니다.");
+      countTable.innerHTML = listCount.rows.length;
+    }
+  }
   }
 
 function showValue(target) {
