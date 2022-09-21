@@ -18,6 +18,9 @@ async function getData() {
     })
     .then((data) => data.json())
     .then((data) => {
+      if(){
+
+      }
       let j = 1;
       for (let i = 0; i < data.length; i++) {
         if (data.length - 1 === i) {
@@ -207,6 +210,13 @@ async function showList(val) {
 
 function showValue(target) {
     searchType.value = target.value;
+}
+
+function countTime(){
+  let sum = 0;
+  for (let i = 1; i <= 1000000; i++) {
+    sum = sum + i;
+  }
 }
 
 function emailCheck(email) {
