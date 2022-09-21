@@ -13,13 +13,13 @@ const searchType = document.getElementById('search-type');
 const list = document.getElementById('target');
 async function getData() {
   try{
-    const res = await fetch(requestURL, {
+    const res = await fetch('http://localhost:3000/accoounts', {
       method: 'GET',
     })
     .then((data) => data.json())
     .then((data) => {
-      if(){
-
+      if(countTime === false){
+        alert('API 실행중 ERROR가 발생했습니다.');
       }
       let j = 1;
       for (let i = 0; i < data.length; i++) {
@@ -213,10 +213,12 @@ function showValue(target) {
 }
 
 function countTime(){
-  let sum = 0;
-  for (let i = 1; i <= 1000000; i++) {
-    sum = sum + i;
-  }
+  setTimeout(function(){
+    if( listCount.rows.length === 0){
+      return false
+    }
+  }, 5000);
+
 }
 
 function emailCheck(email) {
