@@ -227,3 +227,4 @@ function emailCheck(email) {
 }
 
 document.addEventListener('click', postData)
+
