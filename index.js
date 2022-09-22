@@ -36,27 +36,37 @@ async function postData(event) {
     if(!emailCheck(email)){
       alert('email을 형식에 맞게 입력하세요.');
     }else{
-      try{
-        const res = await fetch(requestURL, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            id: Number(targetCount.value),
-            name: tragetName.value,
-            age: Number(tragetAge.value),
-            job : targetJob.value,
-            email : tragetEmail.value
-          }),
-        })
-        .then((data) => data.json())
-        .then(() => {
+      if(listCount.rows.length < 15){
+        console.log(listCount.rows.length);
+        try{
+          await fetch(requestURL, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              id: Number(targetCount.value),
+              name: tragetName.value,
+              age: Number(tragetAge.value),
+              job : targetJob.value,
+              email : tragetEmail.value
+            }),
+          })
+          const countTime = setInterval(function(){
+            count ++;
+            if(count === 5){
+              alert('응답시간이 5초가 지났습니다.');
+              clearInterval(countTime);
+            }
+          },1000);
           targetList.innerHTML = '';
           getData();
-        })
-      }catch{
-        alert("API 실행중 ERROR가 발생했습니다.");
+          clearInterval(countTime);
+        }catch(err){
+          alert(err);
+        }
+      }else{
+        alert('회원이 15명 이상입니다.');
       }
     }
   } else if (event.target.id === 'search-btn') {
@@ -86,7 +96,7 @@ async function postData(event) {
     event.target.style.display = "none";
     event.target.previousSibling .style.display = "block";
     try{
-      fetch(`${requestURL}/${Number(patchNum)}`, {
+      await fetch(`${requestURL}/${Number(patchNum)}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -99,14 +109,19 @@ async function postData(event) {
           email : upemail.value
         }),
       })
-      .then((response) => response.json())
-      .then(() => {
+      const countTime = setInterval(function(){
+        count ++;
+        if(count === 5){
+          alert('응답시간이 5초가 지났습니다.');
+          clearInterval(countTime);
+        }
+      },1000);
         targetList.innerHTML = '';
         getData();
         alert("수정이 완료되었습니다.");
-      })
-    }catch{
-      alert("API 실행중 ERROR가 발생했습니다.");
+        clearInterval(countTime);
+    }catch(err){
+      alert(err);
     }
   }else if(event.target.id === 'reset-btn'){
     targetList.innerHTML = '';
