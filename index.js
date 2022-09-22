@@ -194,7 +194,7 @@ async function showList(val) {
       }
     },1000);
     const post = await data.json()
-    await serarchFetch(post);
+    await serarchFetch(post, val);
     clearInterval(countTime);
   }catch(err){
       alert(err);
@@ -203,7 +203,7 @@ async function showList(val) {
   }
 
 
-function serarchFetch(myJson){
+function serarchFetch(myJson, val){
   let k = 1;
   for (let i = 0; i < myJson.length; i++) {
     if (myJson.length - 1 === i) {
