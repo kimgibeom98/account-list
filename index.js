@@ -11,24 +11,43 @@ const listCount = document.getElementById('table-count');
 const searchInput = document.getElementById('search');
 const searchType = document.getElementById('search-type');
 const list = document.getElementById('target');
+let count = 0;
+
 async function getData() {
-  try{
-    const data = await fetchOption();
-    const countTime = setInterval(function(){
-      count ++;
-      if(count === 5){
-        alert('응답시간이 5초가 지났습니다.');
-        clearInterval(countTime);
-      }
-    },1000);
-    const post = await data.json()
-    await setUserName(post)
-    clearInterval(countTime);
-  }catch(err){
-      alert(err);
-  }
+    try{
+      const data = await fetchOption();
+      const countTime = setInterval(function(){
+        count ++;
+        if(count === 5){
+          alert('응답시간이 5초가 지났습니다.');
+          clearInterval(countTime);
+        }
+      },1000);
+      const post = await data.json()
+      await setUserName(post)
+      clearInterval(countTime);
+    }catch(err){
+        alert(err);
+    }
 }
 getData();
+
+function fetchOption(){
+  return fetch(requestURL, {
+    method: 'GET',
+  })
+}
+function setUserName(myJson){
+  let j = 1;
+  for (let i = 0; i < myJson.length; i++) {
+    if (myJson.length - 1 === i) {
+      targetCount.value = Number(myJson[i].id) + 1;
+    }
+    targetList.innerHTML += `<tr><td data-index=${myJson[i].id}>${j}</td><td class="target-name${i}"><span class="view-data">${myJson[i].name}</span><input class="correction-input" id="up-name" type="text" readonly value="${myJson[i].name}"></td><td><span class="view-data">${myJson[i].age}</span><input class="correction-input" id="up-age" type="text" readonly value="${myJson[i].age}"></td><td><span class="view-data">${myJson[i].job}</span><input class="correction-input" id="up-job" type="text" readonly value="${myJson[i].job}"></td><td><div class="button-box"><span><span class="view-data">${myJson[i].email}</span><input class="correction-input" id="up-email" type="text" readonly value="${myJson[i].email}"></span><div><button class="correction-data" type="button">수정</button><button class="up-data" type="button">완료</button><button onclick="findName(${i});" type="button" class="del-btn">삭제</button></div></div></td></tr>`;
+    j++;
+  }
+  countTable.innerHTML = listCount.rows.length;
+}
 
 async function postData(event) {
   if (event.target.getAttribute('class') === 'submit-btn') {
@@ -182,18 +201,55 @@ async function showList(val) {
       countTable.innerHTML = listCount.rows.length;
   }
   }
+
+
+function serarchFetch(myJson){
+  let k = 1;
+  for (let i = 0; i < myJson.length; i++) {
+    if (myJson.length - 1 === i) {
+      targetCount.value = Number(myJson[i].id) + 1;
+    }
+      if(searchType.value === ""){
+        alert("분류를 선택하세요");
+        getData();
+        return;
+      }else if(searchType.value === "name"){
+        if(myJson[i].name.includes(val)){
+          const name = myJson[i].name.replace(val,`<span style="color: blue;">${val}</span>`)
+          targetList.innerHTML += `<tr><td data-index=${myJson[i].id}>${k}</td><td class="target-name${i}"><span class="view-data">${name}</span><input class="correction-input" id="up-name" type="text" readonly value="${myJson[i].name}"></td><td><span class="view-data">${myJson[i].age}</span><input class="correction-input" id="up-age" type="text" readonly value="${myJson[i].age}"></td><td><span class="view-data">${myJson[i].job}</span><input class="correction-input" id="up-job" type="text" readonly value="${myJson[i].job}"></td><td><div class="button-box"><span><span class="view-data">${myJson[i].email}</span><input class="correction-input" id="up-email" type="text" readonly value="${myJson[i].email}"></span><div><button class="correction-data" type="button">수정</button><button class="up-data" type="button">완료</button><button onclick="findName(${i});" type="button" class="del-btn">삭제</button></div></div></td></tr>`;
+          k++;
+        }
+      }else if(searchType.value === "email"){
+        if(myJson[i].email.includes(val)){
+          const email = myJson[i].email.replace(val,`<span style="color: blue;">${val}</span>`)
+          targetList.innerHTML +=  `<tr><td data-index=${myJson[i].id}>${k}</td><td class="target-name${i}"><span class="view-data">${myJson[i].name}</span><input class="correction-input" id="up-name" type="text" readonly value="${myJson[i].name}"></td><td><span class="view-data">${myJson[i].age}</span><input class="correction-input" id="up-age" type="text" readonly value="${myJson[i].age}"></td><td><span class="view-data">${myJson[i].job}</span><input class="correction-input" id="up-job" type="text" readonly value="${myJson[i].job}"></td><td><div class="button-box"><span><span class="view-data">${email}</span><input class="correction-input" id="up-email" type="text" readonly value="${myJson[i].email}"></span><div><button class="correction-data" type="button">수정</button><button class="up-data" type="button">완료</button><button onclick="findName(${i});" type="button" class="del-btn">삭제</button></div></div></td></tr>`;
+          k++;
+        }
+      }else if(searchType.value === "age"){
+        if(myJson[i].age === Number(val)){
+          const stringVal = val.toString();
+          const age = myJson[i].age.toString().replace(stringVal,`<span style="color: blue;">${stringVal}</span>`)
+          targetList.innerHTML += `<tr><td data-index=${myJson[i].id}>${k}</td><td class="target-name${i}"><span class="view-data">${myJson[i].name}</span><input class="correction-input" id="up-name" type="text" readonly value="${myJson[i].name}"></td><td><span class="view-data">${age}</span><input class="correction-input" id="up-age" type="text" readonly value="${myJson[i].age}"></td><td><span class="view-data">${myJson[i].job}</span><input class="correction-input" id="up-job" type="text" readonly value="${myJson[i].job}"></td><td><div class="button-box"><span><span class="view-data">${myJson[i].email}</span><input class="correction-input" id="up-email" type="text" readonly value="${myJson[i].email}"></span><div><button class="correction-data" type="button">수정</button><button class="up-data" type="button">완료</button><button onclick="findName(${i});" type="button" class="del-btn">삭제</button></div></div></td></tr>`;
+          k++;
+        }
+      }else if(searchType.value === "job"){
+        if(myJson[i].job === val){
+          const job = myJson[i].job.replace(val,`<span style="color: blue;">${val}</span>`)
+          targetList.innerHTML += `<tr><td data-index=${myJson[i].id}>${k}</td><td class="target-name${i}"><span class="view-data">${myJson[i].name}</span><input class="correction-input" id="up-name" type="text" readonly value="${myJson[i].name}"></td><td><span class="view-data">${myJson[i].age}</span><input class="correction-input" id="up-age" type="text" readonly value="${myJson[i].age}"></td><td><span class="view-data">${job}</span><input class="correction-input" id="up-job" type="text" readonly value="${myJson[i].job}"></td><td><div class="button-box"><span><span class="view-data">${myJson[i].email}</span><input class="correction-input" id="up-email" type="text" readonly value="${myJson[i].email}"></span><div><button class="correction-data" type="button">수정</button><button class="up-data" type="button">완료</button><button onclick="findName(${i});" type="button" class="del-btn">삭제</button></div></div></td></tr>`;
+          k++;
+        }
+      }
+    }
+    if(listCount.rows.length === 0){
+      throw new Error('회원이 존재하지 않습니다.');
+    }
+  countTable.innerHTML = listCount.rows.length;
+}
+
 function showValue(target) {
     searchType.value = target.value;
 }
 
-function countTime(){
-  setTimeout(function(){
-    if( listCount.rows.length === 0){
-      return false
-    }
-  }, 5000);
-  return true
-}
 
 function emailCheck(email) {
   let regex = /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
