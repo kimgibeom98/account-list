@@ -13,28 +13,20 @@ const searchType = document.getElementById('search-type');
 const list = document.getElementById('target');
 async function getData() {
   try{
-    const res = await fetch('http://localhost:3000/accoounts', {
-      method: 'GET',
-    })
-    .then((data) => data.json())
-    .then((data) => {
-      if(!countTime()){
-        alert('API 실행중 ERROR가 발생했습니다.');
+    const data = await fetchOption();
+    const countTime = setInterval(function(){
+      count ++;
+      if(count === 5){
+        alert('응답시간이 5초가 지났습니다.');
+        clearInterval(countTime);
       }
-      let j = 1;
-      for (let i = 0; i < data.length; i++) {
-        if (data.length - 1 === i) {
-          targetCount.value = Number(data[i].id) + 1;
-        }
-        targetList.innerHTML += `<tr><td data-index=${data[i].id}>${j}</td><td class="target-name${i}"><span class="view-data">${data[i].name}</span><input class="correction-input" id="up-name" type="text" readonly value="${data[i].name}"></td><td><span class="view-data">${data[i].age}</span><input class="correction-input" id="up-age" type="text" readonly value="${data[i].age}"></td><td><span class="view-data">${data[i].job}</span><input class="correction-input" id="up-job" type="text" readonly value="${data[i].job}"></td><td><div class="button-box"><span><span class="view-data">${data[i].email}</span><input class="correction-input" id="up-email" type="text" readonly value="${data[i].email}"></span><div><button class="correction-data" type="button">수정</button><button class="up-data" type="button">완료</button><button onclick="findName(${i});" type="button" class="del-btn">삭제</button></div></div></td></tr>`;
-        j++;
-      }
-      countTable.innerHTML = listCount.rows.length;
-    });
-  }catch{
-      alert("API 실행중 ERROR가 발생했습니다.");
+    },1000);
+    const post = await data.json()
+    await setUserName(post)
+    clearInterval(countTime);
+  }catch(err){
+      alert(err);
   }
-
 }
 getData();
 
