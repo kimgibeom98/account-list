@@ -145,16 +145,21 @@ function findName(targetNum) {
 async function deleteData(num) {
   delList.style.display = 'none';
   try{
-    const res = await fetch(`${requestURL}/${num}`, {
+    await fetch(`${requestURL}/${num}`, {
       method: "DELETE",
     })
-    .then((response) => response.json())
-    .then((data) => {
+    const countTime = setInterval(function(){
+      count ++;
+      if(count === 5){
+        alert('응답시간이 5초가 지났습니다.');
+        clearInterval(countTime);
+      }
+    },1000);
       targetList.innerHTML = '';
       getData();
-    })
-  }catch{
-    alert("API 실행중 ERROR가 발생했습니다.");
+      clearInterval(countTime);
+  }catch(err){
+    alert(err);
   }
 }
 
