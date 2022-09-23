@@ -60,3 +60,7 @@ h1{font-size: 35px; margin-bottom: 5px;}
 .correction-data{display: block;}
 .correction-input{display: none;}
 #reset-btn{margin-left: 5px;}
+.time-box{position: fixed; right: 30px; top: 50px; border: 1px solid #ddd; padding: 15px;}
+.time-box > ul{padding: 0; margin: 0;}
+.time-box > ul li{display: flex;}
+.time-box > ul li > span:last-of-type{margin-left: 4px;}
