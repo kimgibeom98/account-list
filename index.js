@@ -1,4 +1,5 @@
 const requestURL = 'http://localhost:3000/accoounts'
+const requestTimeurl = 'http://localhost:3000/businessHours'
 const targetList = document.getElementById('target');
 const tragetName = document.getElementById('name')
 const targetJob = document.getElementById('job')
@@ -11,8 +12,33 @@ const listCount = document.getElementById('table-count');
 const searchInput = document.getElementById('search');
 const searchType = document.getElementById('search-type');
 const list = document.getElementById('target');
+const findOpen = document.getElementById('open-time');
+const findClose = document.getElementById('close-time');
 let count = 0;
 
+async function getTime(){
+  try{
+    const data = await fetch(requestTimeurl, {
+      method: 'GET'
+    })
+    const countTime = setInterval(function(){
+      count ++;
+      if(count === 5){
+        alert('응답시간이 5초가 지났습니다.');
+        clearInterval(countTime);
+      }
+    },1000);
+    const post = await data.json()
+    await viewTime(post);
+    clearInterval(countTime);
+  }catch(err){
+
+  }
+}
+function viewTime(myJson){
+  findOpen.innerHTML += `${myJson.open}`
+  findClose.innerHTML += `${myJson.close}`
+}
 async function getData() {
     try{
       const data = await fetchOption();
@@ -31,6 +57,7 @@ async function getData() {
     }
 }
 getData();
+getTime();
 
 function fetchOption(){
   return fetch(requestURL, {
