@@ -83,7 +83,6 @@ async function postData(event) {
       alert('email을 형식에 맞게 입력하세요.');
     }else{
       if(listCount.rows.length < 15){
-        console.log(listCount.rows.length);
         try{
           await fetch(requestURL, {
             method: "POST",
