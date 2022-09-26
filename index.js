@@ -70,8 +70,7 @@ async function postData(event) {
             }),
           })
           timeOut();
-          targetList.innerHTML = '';
-          getData();
+          resetView();
           clearInterval(countTime);
         }catch(err){
           alert(err);
@@ -119,16 +118,14 @@ async function postData(event) {
         }),
       })
       timeOut();
-      targetList.innerHTML = '';
-      getData();
+      resetView();
       alert("수정이 완료되었습니다.");
       clearInterval(countTime);
     }catch(err){
       alert(err);
     }
   }else if(event.target.id === 'reset-btn'){
-    targetList.innerHTML = '';
-    getData();
+    resetView();
     searchInput.value = '';
   }
 }
@@ -140,8 +137,7 @@ async function deleteData(num) {
       method: "DELETE",
     })
     timeOut();
-    targetList.innerHTML = '';
-    getData();
+    resetView();
     clearInterval(countTime);
   }catch(err){
     alert(err);
@@ -260,6 +256,11 @@ function timeOut(){
       clearInterval(countTime);
     }
   },1000);
+}
+
+function resetView(){
+  targetList.innerHTML = '';
+  getData();
 }
 
 document.addEventListener('keydown', NotReload)
