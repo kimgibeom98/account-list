@@ -18,6 +18,18 @@ let count = 0;
 
 async function getTime(){
   try{
+    const data = await fetchOption(requestTimeurl);
+    timeOut();
+    const post = await data.json()
+    await viewTime(post);
+    clearInterval(countTime);
+  }catch(err){
+    alert(err)
+  }
+}
+
+async function getTime(){
+  try{
     const data = await fetch(requestTimeurl, {
       method: 'GET'
     })
