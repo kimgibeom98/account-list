@@ -15,7 +15,6 @@ const list = document.getElementById('target');
 const findOpen = document.getElementById('open-time');
 const findClose = document.getElementById('close-time');
 let count = 0;
-
 let countTime;
 
 async function getTime(){
@@ -48,46 +47,10 @@ async function getData() {
       alert(err);
   }
 }
-async function getData() {
-    try{
-      const data = await fetchOption();
-      const countTime = setInterval(function(){
-        count ++;
-        if(count === 5){
-          alert('응답시간이 5초가 지났습니다.');
-          clearInterval(countTime);
-        }
-      },1000);
-      const post = await data.json()
-      await setUserName(post)
-      clearInterval(countTime);
-    }catch(err){
-        alert(err);
-    }
-}
-getData();
-getTime();
-
-function fetchOption(){
-  return fetch(requestURL, {
-    method: 'GET',
-  })
-}
-function setUserName(myJson){
-  let j = 1;
-  for (let i = 0; i < myJson.length; i++) {
-    if (myJson.length - 1 === i) {
-      targetCount.value = Number(myJson[i].id) + 1;
-    }
-    targetList.innerHTML += `<tr><td data-index=${myJson[i].id}>${j}</td><td class="target-name${i}"><span class="view-data">${myJson[i].name}</span><input class="correction-input" id="up-name" type="text" readonly value="${myJson[i].name}"></td><td><span class="view-data">${myJson[i].age}</span><input class="correction-input" id="up-age" type="text" readonly value="${myJson[i].age}"></td><td><span class="view-data">${myJson[i].job}</span><input class="correction-input" id="up-job" type="text" readonly value="${myJson[i].job}"></td><td><div class="button-box"><span><span class="view-data">${myJson[i].email}</span><input class="correction-input" id="up-email" type="text" readonly value="${myJson[i].email}"></span><div><button class="correction-data" type="button">수정</button><button class="up-data" type="button">완료</button><button onclick="findName(${i});" type="button" class="del-btn">삭제</button></div></div></td></tr>`;
-    j++;
-  }
-  countTable.innerHTML = listCount.rows.length;
-}
 
 async function postData(event) {
   if (event.target.getAttribute('class') === 'submit-btn') {
-    let email = tragetEmail.value;
+    const email = tragetEmail.value;
     if(!emailCheck(email)){
       alert('email을 형식에 맞게 입력하세요.');
     }else{
@@ -106,13 +69,7 @@ async function postData(event) {
               email : tragetEmail.value
             }),
           })
-          const countTime = setInterval(function(){
-            count ++;
-            if(count === 5){
-              alert('응답시간이 5초가 지났습니다.');
-              clearInterval(countTime);
-            }
-          },1000);
+          timeOut();
           targetList.innerHTML = '';
           getData();
           clearInterval(countTime);
@@ -124,9 +81,7 @@ async function postData(event) {
       }
     }
   } else if (event.target.id === 'search-btn') {
-    event.preventDefault();
-    const val = searchInput.value;
-    showList(val)
+    showList(searchInput.value)
   }else if(event.target.getAttribute('class') === 'correction-data'){
     event.target.style.display = "none";
     event.target.nextSibling.style.display = "block";
@@ -141,7 +96,7 @@ async function postData(event) {
       updateInput[i].style.background ='#fff'
     }
   }else if(event.target.getAttribute('class') === 'up-data'){
-    const updateTr = event.target.parentNode.parentNode.parentNode.parentNode
+    const updateTr = event.target.parentNode.parentNode.parentNode.parentNode;
     const patchNum = updateTr.firstChild.dataset.index;
     const upName = updateTr.querySelector('#up-name');
     const upAge = updateTr.querySelector('#up-age');
@@ -163,17 +118,11 @@ async function postData(event) {
           email : upemail.value
         }),
       })
-      const countTime = setInterval(function(){
-        count ++;
-        if(count === 5){
-          alert('응답시간이 5초가 지났습니다.');
-          clearInterval(countTime);
-        }
-      },1000);
-        targetList.innerHTML = '';
-        getData();
-        alert("수정이 완료되었습니다.");
-        clearInterval(countTime);
+      timeOut();
+      targetList.innerHTML = '';
+      getData();
+      alert("수정이 완료되었습니다.");
+      clearInterval(countTime);
     }catch(err){
       alert(err);
     }
@@ -182,6 +131,35 @@ async function postData(event) {
     getData();
     searchInput.value = '';
   }
+}
+
+async function deleteData(num) {
+  delList.style.display = 'none';
+  try{
+    await fetch(`${requestURL}/${num}`, {
+      method: "DELETE",
+    })
+    timeOut();
+    targetList.innerHTML = '';
+    getData();
+    clearInterval(countTime);
+  }catch(err){
+    alert(err);
+  }
+}
+
+async function showList(val) {
+  list.innerHTML = '';
+  try{
+    const data = await fetchOption(requestURL);
+    timeOut();
+    const post = await data.json()
+    await serarchFetch(post, val);
+  }catch(err){
+    alert(err);
+    countTable.innerHTML = listCount.rows.length;
+  }
+  clearInterval(countTime);
 }
 
 function findName(targetNum) {
@@ -195,48 +173,6 @@ function findName(targetNum) {
     delList.style.display = 'none';
   }
 }
-
-async function deleteData(num) {
-  delList.style.display = 'none';
-  try{
-    await fetch(`${requestURL}/${num}`, {
-      method: "DELETE",
-    })
-    const countTime = setInterval(function(){
-      count ++;
-      if(count === 5){
-        alert('응답시간이 5초가 지났습니다.');
-        clearInterval(countTime);
-      }
-    },1000);
-      targetList.innerHTML = '';
-      getData();
-      clearInterval(countTime);
-  }catch(err){
-    alert(err);
-  }
-}
-
-async function showList(val) {
-  list.innerHTML = '';
-  try{
-    const data = await fetchOption();
-    const countTime = setInterval(function(){
-      count ++;
-      if(count === 5){
-        alert('응답시간이 5초가 지났습니다.');
-        clearInterval(countTime);
-      }
-    },1000);
-    const post = await data.json()
-    await serarchFetch(post, val);
-    clearInterval(countTime);
-  }catch(err){
-      alert(err);
-      countTable.innerHTML = listCount.rows.length;
-  }
-  }
-
 
 function serarchFetch(myJson, val){
   let k = 1;
@@ -281,15 +217,51 @@ function serarchFetch(myJson, val){
   countTable.innerHTML = listCount.rows.length;
 }
 
+function fetchOption(infoURL){
+  return fetch(infoURL, {
+    method: 'GET',
+  })
+}
+
+function setUserName(myJson){
+  let j = 1;
+  for (let i = 0; i < myJson.length; i++) {
+    if (myJson.length - 1 === i) {
+      targetCount.value = Number(myJson[i].id) + 1;
+    }
+    targetList.innerHTML += `<tr><td data-index=${myJson[i].id}>${j}</td><td class="target-name${i}"><span class="view-data">${myJson[i].name}</span><input class="correction-input" id="up-name" type="text" readonly value="${myJson[i].name}"></td><td><span class="view-data">${myJson[i].age}</span><input class="correction-input" id="up-age" type="text" readonly value="${myJson[i].age}"></td><td><span class="view-data">${myJson[i].job}</span><input class="correction-input" id="up-job" type="text" readonly value="${myJson[i].job}"></td><td><div class="button-box"><span><span class="view-data">${myJson[i].email}</span><input class="correction-input" id="up-email" type="text" readonly value="${myJson[i].email}"></span><div><button class="correction-data" type="button">수정</button><button class="up-data" type="button">완료</button><button onclick="findName(${i});" type="button" class="del-btn">삭제</button></div></div></td></tr>`;
+    j++;
+  }
+  countTable.innerHTML = listCount.rows.length;
+}
+
 function showValue(target) {
     searchType.value = target.value;
 }
-
 
 function emailCheck(email) {
   let regex = /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
   return (email != '' && email != 'undefined' && regex.test(email));
 }
 
+function NotReload(event){
+  if( (event.ctrlKey == true && (event.keyCode == 78 || event.keyCode == 82)) || (event.keyCode == 116) ) {
+      event.keyCode = 0;
+      event.cancelBubble = true;
+      event.returnValue = false;
+  } 
+}
+
+function timeOut(){
+  countTime = setInterval(function(){
+    count ++;
+    if(count === 5){
+      alert('응답시간이 5초가 지났습니다.');
+      clearInterval(countTime);
+    }
+  },1000);
+}
+
+document.addEventListener('keydown', NotReload)
 document.addEventListener('click', postData)
 
