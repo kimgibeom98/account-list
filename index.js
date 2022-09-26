@@ -16,6 +16,8 @@ const findOpen = document.getElementById('open-time');
 const findClose = document.getElementById('close-time');
 let count = 0;
 
+let countTime;
+
 async function getTime(){
   try{
     const data = await fetchOption(requestTimeurl);
@@ -28,28 +30,23 @@ async function getTime(){
   }
 }
 
-async function getTime(){
-  try{
-    const data = await fetch(requestTimeurl, {
-      method: 'GET'
-    })
-    const countTime = setInterval(function(){
-      count ++;
-      if(count === 5){
-        alert('응답시간이 5초가 지났습니다.');
-        clearInterval(countTime);
-      }
-    },1000);
-    const post = await data.json()
-    await viewTime(post);
-    clearInterval(countTime);
-  }catch(err){
-
-  }
-}
 function viewTime(myJson){
   findOpen.innerHTML += `${myJson.open}`
   findClose.innerHTML += `${myJson.close}`
+  getData();
+}
+getTime();
+
+async function getData() {
+  try{
+    const data = await fetchOption(requestURL);
+    timeOut();
+    const post = await data.json()
+    await setUserName(post)
+    clearInterval(countTime);
+  }catch(err){
+      alert(err);
+  }
 }
 async function getData() {
     try{
