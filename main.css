@@ -33,7 +33,7 @@ h1{font-size: 35px; margin-bottom: 5px;}
 #target > tr > td input{border: 1px solid #fff;}
 #target > tr > td input:focus{outline: none;}
 #target > tr:nth-of-type(odd) td input{border: 1px solid #f9f9f9; background-color: #f9f9f9;}
-.list-table > thead tr th:first-of-type{width: 52.64px;}
+.list-table > thead tr th:first-of-type{width: 57.64px;}
 .list-table > thead tr th:nth-of-type(2){width: 120px;}
 .list-table > thead tr th:nth-of-type(3){width: 85px;}
 .list-table > thead tr th:nth-of-type(4){width: 155px;}
