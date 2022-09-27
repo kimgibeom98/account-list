@@ -14,16 +14,40 @@ const searchType = document.getElementById('search-type');
 const list = document.getElementById('target');
 const findOpen = document.getElementById('open-time');
 const findClose = document.getElementById('close-time');
-let count = 0;
-let countTime;
+const TIME_OUT = 5000;
+const PAGE_COUNT = 15;
+
+async function fetchTimeout(resource, options = {}) {
+  const { timeout = TIME_OUT } = options;
+  
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeout);
+  const response = await fetch(resource, {
+    ...options,
+    signal: controller.signal  
+  });
+  clearTimeout(id);
+  return response;
+}
+
+async function loadGames() {
+  try {
+    const response = await fetchTimeout(requestURL, {
+      timeout: TIME_OUT
+    });
+    const games = await response.json();
+    return games;
+  } catch (err) {
+    alert('응답시간이 5초가 지났습니다.')
+  }
+}
 
 async function getTime(){
   try{
     const data = await fetchOption(requestTimeurl);
-    timeOut();
+    loadGames();
     const post = await data.json()
     await viewTime(post);
-    clearInterval(countTime);
   }catch(err){
     alert(err)
   }
@@ -39,10 +63,9 @@ getTime();
 async function getData() {
   try{
     const data = await fetchOption(requestURL);
-    timeOut();
+    loadGames();
     const post = await data.json()
     await setUserName(post)
-    clearInterval(countTime);
   }catch(err){
       alert(err);
   }
@@ -54,7 +77,7 @@ async function postData(event) {
     if(!emailCheck(email)){
       alert('email을 형식에 맞게 입력하세요.');
     }else{
-      if(listCount.rows.length < 15){
+      if(listCount.rows.length < PAGE_COUNT){
         try{
           await fetch(requestURL, {
             method: "POST",
@@ -69,14 +92,13 @@ async function postData(event) {
               email : tragetEmail.value
             }),
           })
-          timeOut();
+          loadGames();
           resetView();
-          clearInterval(countTime);
         }catch(err){
           alert(err);
         }
       }else{
-        alert('회원이 15명 이상입니다.');
+        alert(`회원이 ${PAGE_COUNT}명 이상입니다.`);
       }
     }
   } else if (event.target.id === 'search-btn') {
@@ -117,10 +139,9 @@ async function postData(event) {
           email : upemail.value
         }),
       })
-      timeOut();
+      loadGames();
       resetView();
       alert("수정이 완료되었습니다.");
-      clearInterval(countTime);
     }catch(err){
       alert(err);
     }
@@ -136,9 +157,8 @@ async function deleteData(num) {
     await fetch(`${requestURL}/${num}`, {
       method: "DELETE",
     })
-    timeOut();
+    loadGames();
     resetView();
-    clearInterval(countTime);
   }catch(err){
     alert(err);
   }
@@ -151,14 +171,13 @@ async function showList(val) {
     list.innerHTML = '';
     try{
       const data = await fetchOption(requestURL);
-      timeOut();
+      loadGames();
       const post = await data.json()
       await serarchFetch(post, val);
     }catch(err){
       alert(err);
       countTable.innerHTML = listCount.rows.length;
     }
-    clearInterval(countTime);
   }
 }
 
@@ -180,36 +199,36 @@ function serarchFetch(myJson, val){
     if (myJson.length - 1 === i) {
       targetCount.value = Number(myJson[i].id) + 1;
     }
-      if(searchType.value === "name"){
-        if(myJson[i].name.includes(val)){
-          const name = myJson[i].name.replace(val,`<span style="color: blue;">${val}</span>`)
-          targetList.innerHTML += `<tr><td data-index=${myJson[i].id}>${k}</td><td class="target-name${i}"><span class="view-data">${name}</span><input class="correction-input" id="up-name" type="text" readonly value="${myJson[i].name}"></td><td><span class="view-data">${myJson[i].age}</span><input class="correction-input" id="up-age" type="text" readonly value="${myJson[i].age}"></td><td><span class="view-data">${myJson[i].job}</span><input class="correction-input" id="up-job" type="text" readonly value="${myJson[i].job}"></td><td><div class="button-box"><span><span class="view-data">${myJson[i].email}</span><input class="correction-input" id="up-email" type="text" readonly value="${myJson[i].email}"></span><div><button class="correction-data" type="button">수정</button><button class="up-data" type="button">완료</button><button onclick="findName(${i});" type="button" class="del-btn">삭제</button></div></div></td></tr>`;
-          k++;
-        }
-      }else if(searchType.value === "email"){
-        if(myJson[i].email.includes(val)){
-          const email = myJson[i].email.replace(val,`<span style="color: blue;">${val}</span>`)
-          targetList.innerHTML +=  `<tr><td data-index=${myJson[i].id}>${k}</td><td class="target-name${i}"><span class="view-data">${myJson[i].name}</span><input class="correction-input" id="up-name" type="text" readonly value="${myJson[i].name}"></td><td><span class="view-data">${myJson[i].age}</span><input class="correction-input" id="up-age" type="text" readonly value="${myJson[i].age}"></td><td><span class="view-data">${myJson[i].job}</span><input class="correction-input" id="up-job" type="text" readonly value="${myJson[i].job}"></td><td><div class="button-box"><span><span class="view-data">${email}</span><input class="correction-input" id="up-email" type="text" readonly value="${myJson[i].email}"></span><div><button class="correction-data" type="button">수정</button><button class="up-data" type="button">완료</button><button onclick="findName(${i});" type="button" class="del-btn">삭제</button></div></div></td></tr>`;
-          k++;
-        }
-      }else if(searchType.value === "age"){
-        if(myJson[i].age === Number(val)){
-          const stringVal = val.toString();
-          const age = myJson[i].age.toString().replace(stringVal,`<span style="color: blue;">${stringVal}</span>`)
-          targetList.innerHTML += `<tr><td data-index=${myJson[i].id}>${k}</td><td class="target-name${i}"><span class="view-data">${myJson[i].name}</span><input class="correction-input" id="up-name" type="text" readonly value="${myJson[i].name}"></td><td><span class="view-data">${age}</span><input class="correction-input" id="up-age" type="text" readonly value="${myJson[i].age}"></td><td><span class="view-data">${myJson[i].job}</span><input class="correction-input" id="up-job" type="text" readonly value="${myJson[i].job}"></td><td><div class="button-box"><span><span class="view-data">${myJson[i].email}</span><input class="correction-input" id="up-email" type="text" readonly value="${myJson[i].email}"></span><div><button class="correction-data" type="button">수정</button><button class="up-data" type="button">완료</button><button onclick="findName(${i});" type="button" class="del-btn">삭제</button></div></div></td></tr>`;
-          k++;
-        }
-      }else if(searchType.value === "job"){
-        if(myJson[i].job === val){
-          const job = myJson[i].job.replace(val,`<span style="color: blue;">${val}</span>`)
-          targetList.innerHTML += `<tr><td data-index=${myJson[i].id}>${k}</td><td class="target-name${i}"><span class="view-data">${myJson[i].name}</span><input class="correction-input" id="up-name" type="text" readonly value="${myJson[i].name}"></td><td><span class="view-data">${myJson[i].age}</span><input class="correction-input" id="up-age" type="text" readonly value="${myJson[i].age}"></td><td><span class="view-data">${job}</span><input class="correction-input" id="up-job" type="text" readonly value="${myJson[i].job}"></td><td><div class="button-box"><span><span class="view-data">${myJson[i].email}</span><input class="correction-input" id="up-email" type="text" readonly value="${myJson[i].email}"></span><div><button class="correction-data" type="button">수정</button><button class="up-data" type="button">완료</button><button onclick="findName(${i});" type="button" class="del-btn">삭제</button></div></div></td></tr>`;
-          k++;
-        }
+    if(searchType.value === "name"){
+      if(myJson[i].name.includes(val)){
+        const name = myJson[i].name.replace(val,`<span style="color: blue;">${val}</span>`)
+        targetList.innerHTML += `<tr><td data-index=${myJson[i].id}>${k}</td><td class="target-name${i}"><span class="view-data">${name}</span><input class="correction-input" id="up-name" type="text" readonly value="${myJson[i].name}"></td><td><span class="view-data">${myJson[i].age}</span><input class="correction-input" id="up-age" type="text" readonly value="${myJson[i].age}"></td><td><span class="view-data">${myJson[i].job}</span><input class="correction-input" id="up-job" type="text" readonly value="${myJson[i].job}"></td><td><div class="button-box"><span><span class="view-data">${myJson[i].email}</span><input class="correction-input" id="up-email" type="text" readonly value="${myJson[i].email}"></span><div><button class="correction-data" type="button">수정</button><button class="up-data" type="button">완료</button><button onclick="findName(${i});" type="button" class="del-btn">삭제</button></div></div></td></tr>`;
+        k++;
+      }
+    }else if(searchType.value === "email"){
+      if(myJson[i].email.includes(val)){
+        const email = myJson[i].email.replace(val,`<span style="color: blue;">${val}</span>`)
+        targetList.innerHTML +=  `<tr><td data-index=${myJson[i].id}>${k}</td><td class="target-name${i}"><span class="view-data">${myJson[i].name}</span><input class="correction-input" id="up-name" type="text" readonly value="${myJson[i].name}"></td><td><span class="view-data">${myJson[i].age}</span><input class="correction-input" id="up-age" type="text" readonly value="${myJson[i].age}"></td><td><span class="view-data">${myJson[i].job}</span><input class="correction-input" id="up-job" type="text" readonly value="${myJson[i].job}"></td><td><div class="button-box"><span><span class="view-data">${email}</span><input class="correction-input" id="up-email" type="text" readonly value="${myJson[i].email}"></span><div><button class="correction-data" type="button">수정</button><button class="up-data" type="button">완료</button><button onclick="findName(${i});" type="button" class="del-btn">삭제</button></div></div></td></tr>`;
+        k++;
+      }
+    }else if(searchType.value === "age"){
+      if(myJson[i].age === Number(val)){
+        const stringVal = val.toString();
+        const age = myJson[i].age.toString().replace(stringVal,`<span style="color: blue;">${stringVal}</span>`)
+        targetList.innerHTML += `<tr><td data-index=${myJson[i].id}>${k}</td><td class="target-name${i}"><span class="view-data">${myJson[i].name}</span><input class="correction-input" id="up-name" type="text" readonly value="${myJson[i].name}"></td><td><span class="view-data">${age}</span><input class="correction-input" id="up-age" type="text" readonly value="${myJson[i].age}"></td><td><span class="view-data">${myJson[i].job}</span><input class="correction-input" id="up-job" type="text" readonly value="${myJson[i].job}"></td><td><div class="button-box"><span><span class="view-data">${myJson[i].email}</span><input class="correction-input" id="up-email" type="text" readonly value="${myJson[i].email}"></span><div><button class="correction-data" type="button">수정</button><button class="up-data" type="button">완료</button><button onclick="findName(${i});" type="button" class="del-btn">삭제</button></div></div></td></tr>`;
+        k++;
+      }
+    }else if(searchType.value === "job"){
+      if(myJson[i].job === val){
+        const job = myJson[i].job.replace(val,`<span style="color: blue;">${val}</span>`)
+        targetList.innerHTML += `<tr><td data-index=${myJson[i].id}>${k}</td><td class="target-name${i}"><span class="view-data">${myJson[i].name}</span><input class="correction-input" id="up-name" type="text" readonly value="${myJson[i].name}"></td><td><span class="view-data">${myJson[i].age}</span><input class="correction-input" id="up-age" type="text" readonly value="${myJson[i].age}"></td><td><span class="view-data">${job}</span><input class="correction-input" id="up-job" type="text" readonly value="${myJson[i].job}"></td><td><div class="button-box"><span><span class="view-data">${myJson[i].email}</span><input class="correction-input" id="up-email" type="text" readonly value="${myJson[i].email}"></span><div><button class="correction-data" type="button">수정</button><button class="up-data" type="button">완료</button><button onclick="findName(${i});" type="button" class="del-btn">삭제</button></div></div></td></tr>`;
+        k++;
       }
     }
-    if(listCount.rows.length === 0){
-      throw new Error('회원이 존재하지 않습니다.');
-    }
+  }
+  if(listCount.rows.length === 0){
+    throw new Error('회원이 존재하지 않습니다.');
+  }
   countTable.innerHTML = listCount.rows.length;
 }
 
@@ -236,26 +255,8 @@ function showValue(target) {
 }
 
 function emailCheck(email) {
-  let regex = /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+  const regex = /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
   return (email != '' && email != 'undefined' && regex.test(email));
-}
-
-function NotReload(event){
-  if( (event.ctrlKey == true && (event.keyCode == 78 || event.keyCode == 82)) || (event.keyCode == 116) ) {
-      event.keyCode = 0;
-      event.cancelBubble = true;
-      event.returnValue = false;
-  } 
-}
-
-function timeOut(){
-  countTime = setInterval(function(){
-    count ++;
-    if(count === 5){
-      alert('응답시간이 5초가 지났습니다.');
-      clearInterval(countTime);
-    }
-  },1000);
 }
 
 function resetView(){
@@ -263,6 +264,5 @@ function resetView(){
   getData();
 }
 
-document.addEventListener('keydown', NotReload)
 document.addEventListener('click', postData)
 
