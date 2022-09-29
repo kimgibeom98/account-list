@@ -171,7 +171,7 @@ async function showList(val) {
       const response = await fetchOption(requestURL);
       loadTime();
       const post = await response.json()
-      await serarchFetch(post, val);
+      await searchResult(post, val);
     } catch (err) {
       alert(err);
       countTable.innerHTML = listCount.rows.length;
@@ -191,7 +191,7 @@ function findName(targetNum) {
   }
 }
 
-function serarchFetch(myJson, val){
+function searchResult(myJson, val){
   let k = 1;
   for (let i = 0; i < myJson.length; i++) {
     if (myJson.length - 1 === i) {
