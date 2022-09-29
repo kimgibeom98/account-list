@@ -60,9 +60,9 @@ getTime();
 
 async function getData() {
   try {
-    const data = await fetchOption(requestURL);
+    const response = await fetchOption(requestURL);
     loadTime();
-    const post = await data.json()
+    const post = await response.json()
     await setUserName(post)
   } catch (err){
       alert(err);
@@ -168,9 +168,9 @@ async function showList(val) {
   } else {
     targetList.innerHTML = '';
     try {
-      const data = await fetchOption(requestURL);
+      const response = await fetchOption(requestURL);
       loadTime();
-      const post = await data.json()
+      const post = await response.json()
       await serarchFetch(post, val);
     } catch (err){
       alert(err);
