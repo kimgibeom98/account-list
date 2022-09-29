@@ -33,8 +33,8 @@ async function loadTime() {
     const response = await fetchTimeout(requestURL, {
       timeout: TIME_OUT
     });
-    const games = await response.json();
-    return games;
+    const post = await response.json();
+    return post;
   } catch (err) {
     alert('응답시간이 5초가 지났습니다.')
   }
@@ -42,9 +42,9 @@ async function loadTime() {
 
 async function getTime(){
   try {
-    const data = await fetchOption(requestTimeURL);
+    const response = await fetchOption(requestTimeURL);
     loadTime();
-    const post = await data.json()
+    const post = await response.json()
     await viewTime(post);
   } catch (err){
     alert(err)
