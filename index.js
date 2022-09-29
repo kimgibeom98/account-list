@@ -46,7 +46,7 @@ async function getTime(){
     loadTime();
     const post = await response.json()
     await viewTime(post);
-  } catch (err){
+  } catch (err) {
     alert(err)
   }
 }
@@ -64,7 +64,7 @@ async function getData() {
     loadTime();
     const post = await response.json()
     await setUserName(post)
-  } catch (err){
+  } catch (err) {
       alert(err);
   }
 }
@@ -72,7 +72,7 @@ async function getData() {
 async function postData(event) {
   if (event.target.getAttribute('class') === 'submit-btn') {
     const email = tragetEmail.value;
-    if (!emailCheck(email)){
+    if (!emailCheck(email)) {
       alert('email을 형식에 맞게 입력하세요.');
     } else {
       if (listCount.rows.length < PAGE_COUNT){
@@ -101,20 +101,20 @@ async function postData(event) {
     }
   } else if (event.target.id === 'search-btn') {
     showList(searchInput.value)
-  } else if (event.target.getAttribute('class') === 'correction-data'){
+  } else if (event.target.getAttribute('class') === 'correction-data') {
     event.target.style.display = "none";
     event.target.nextSibling.style.display = "block";
     const updateTr = event.target.parentNode.parentNode.parentNode.parentNode; 
     const updateInput = updateTr.querySelectorAll('input');
     const noneSpan = updateTr.querySelectorAll('.view-data');
-    for (let i = 0; i < updateInput.length; i++){
+    for (let i = 0; i < updateInput.length; i++) {
       noneSpan[i].style.display = "none"
       updateInput[i].style.display = "inline-block"
       updateInput[i].readOnly  = false;
       updateInput[i].style.border ='1px solid #888',
       updateInput[i].style.background ='#fff'
     }
-  } else if (event.target.getAttribute('class') === 'up-data'){
+  } else if (event.target.getAttribute('class') === 'up-data') {
     const updateTr = event.target.parentNode.parentNode.parentNode.parentNode;
     const patchNum = updateTr.firstChild.dataset.index;
     const upName = updateTr.querySelector('#up-name');
@@ -140,10 +140,10 @@ async function postData(event) {
       loadTime();
       resetView();
       alert("수정이 완료되었습니다.");
-    } catch (err){
+    } catch (err) {
       alert(err);
     }
-  } else if (event.target.id === 'reset-btn'){
+  } else if (event.target.id === 'reset-btn') {
     resetView();
     searchInput.value = '';
   }
@@ -157,13 +157,13 @@ async function deleteData(num) {
     })
     loadTime();
     resetView();
-  } catch (err){
+  } catch (err) {
     alert(err);
   }
 }
 
 async function showList(val) {
-  if (searchType.value === '' || searchType.value === '선택'){
+  if (searchType.value === '' || searchType.value === '선택') {
     alert("분류를 선택하세요"); 
   } else {
     targetList.innerHTML = '';
@@ -172,7 +172,7 @@ async function showList(val) {
       loadTime();
       const post = await response.json()
       await serarchFetch(post, val);
-    } catch (err){
+    } catch (err) {
       alert(err);
       countTable.innerHTML = listCount.rows.length;
     }
@@ -197,34 +197,34 @@ function serarchFetch(myJson, val){
     if (myJson.length - 1 === i) {
       targetCount.value = Number(myJson[i].id) + 1;
     }
-    if (searchType.value === "name"){
-      if (myJson[i].name.includes(val)){
+    if (searchType.value === "name") {
+      if (myJson[i].name.includes(val)) {
         const name = myJson[i].name.replace(val,`<span style="color: blue;">${val}</span>`)
         targetList.innerHTML += `<tr><td data-index=${myJson[i].id}>${k}</td><td class="target-name${i}"><span class="view-data">${name}</span><input class="correction-input" id="up-name" type="text" readonly value="${myJson[i].name}"></td><td><span class="view-data">${myJson[i].age}</span><input class="correction-input" id="up-age" type="text" readonly value="${myJson[i].age}"></td><td><span class="view-data">${myJson[i].job}</span><input class="correction-input" id="up-job" type="text" readonly value="${myJson[i].job}"></td><td><div class="button-box"><span><span class="view-data">${myJson[i].email}</span><input class="correction-input" id="up-email" type="text" readonly value="${myJson[i].email}"></span><div><button class="correction-data" type="button">수정</button><button class="up-data" type="button">완료</button><button onclick="findName(${i});" type="button" class="del-btn">삭제</button></div></div></td></tr>`;
         k++;
       }
-    } else if (searchType.value === "email"){
-      if (myJson[i].email.includes(val)){
+    } else if (searchType.value === "email") {
+      if (myJson[i].email.includes(val)) {
         const email = myJson[i].email.replace(val,`<span style="color: blue;">${val}</span>`)
         targetList.innerHTML +=  `<tr><td data-index=${myJson[i].id}>${k}</td><td class="target-name${i}"><span class="view-data">${myJson[i].name}</span><input class="correction-input" id="up-name" type="text" readonly value="${myJson[i].name}"></td><td><span class="view-data">${myJson[i].age}</span><input class="correction-input" id="up-age" type="text" readonly value="${myJson[i].age}"></td><td><span class="view-data">${myJson[i].job}</span><input class="correction-input" id="up-job" type="text" readonly value="${myJson[i].job}"></td><td><div class="button-box"><span><span class="view-data">${email}</span><input class="correction-input" id="up-email" type="text" readonly value="${myJson[i].email}"></span><div><button class="correction-data" type="button">수정</button><button class="up-data" type="button">완료</button><button onclick="findName(${i});" type="button" class="del-btn">삭제</button></div></div></td></tr>`;
         k++;
       }
-    } else if (searchType.value === "age"){
-      if (myJson[i].age === Number(val)){
+    } else if (searchType.value === "age") {
+      if (myJson[i].age === Number(val)) {
         const stringVal = val.toString();
         const age = myJson[i].age.toString().replace(stringVal,`<span style="color: blue;">${stringVal}</span>`)
         targetList.innerHTML += `<tr><td data-index=${myJson[i].id}>${k}</td><td class="target-name${i}"><span class="view-data">${myJson[i].name}</span><input class="correction-input" id="up-name" type="text" readonly value="${myJson[i].name}"></td><td><span class="view-data">${age}</span><input class="correction-input" id="up-age" type="text" readonly value="${myJson[i].age}"></td><td><span class="view-data">${myJson[i].job}</span><input class="correction-input" id="up-job" type="text" readonly value="${myJson[i].job}"></td><td><div class="button-box"><span><span class="view-data">${myJson[i].email}</span><input class="correction-input" id="up-email" type="text" readonly value="${myJson[i].email}"></span><div><button class="correction-data" type="button">수정</button><button class="up-data" type="button">완료</button><button onclick="findName(${i});" type="button" class="del-btn">삭제</button></div></div></td></tr>`;
         k++;
       }
-    } else if (searchType.value === "job"){
-      if (myJson[i].job === val){
+    } else if (searchType.value === "job") {
+      if (myJson[i].job === val) {
         const job = myJson[i].job.replace(val,`<span style="color: blue;">${val}</span>`)
         targetList.innerHTML += `<tr><td data-index=${myJson[i].id}>${k}</td><td class="target-name${i}"><span class="view-data">${myJson[i].name}</span><input class="correction-input" id="up-name" type="text" readonly value="${myJson[i].name}"></td><td><span class="view-data">${myJson[i].age}</span><input class="correction-input" id="up-age" type="text" readonly value="${myJson[i].age}"></td><td><span class="view-data">${job}</span><input class="correction-input" id="up-job" type="text" readonly value="${myJson[i].job}"></td><td><div class="button-box"><span><span class="view-data">${myJson[i].email}</span><input class="correction-input" id="up-email" type="text" readonly value="${myJson[i].email}"></span><div><button class="correction-data" type="button">수정</button><button class="up-data" type="button">완료</button><button onclick="findName(${i});" type="button" class="del-btn">삭제</button></div></div></td></tr>`;
         k++;
       }
     }
   }
-  if (listCount.rows.length === 0){
+  if (listCount.rows.length === 0) {
     throw new Error('회원이 존재하지 않습니다.');
   }
   countTable.innerHTML = listCount.rows.length;
