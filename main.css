@@ -27,8 +27,6 @@ h1{font-size: 35px; margin-bottom: 5px;}
 #target > tr > td:nth-of-type(4) > span,
 #target > tr > td:nth-of-type(4) > input{width: 100%; font-size: 13px;}
 #target > tr > td:nth-of-type(4){width: 204px; box-sizing: border-box;}
-/* #target > tr > td:nth-of-type(5) span, */
-/* #target > tr > td:nth-of-type(5) input{width: 140px; box-sizing: border-box;} */
 #target > tr > td:nth-of-type(5){width: 300px;}
 #target > tr > td input{border: 1px solid #fff;}
 #target > tr > td input:focus{outline: none;}
