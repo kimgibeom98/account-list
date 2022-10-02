@@ -30,7 +30,6 @@ async function fetchTimeout(resource, options = {}) {
 
 async function loadTime() {
   try {
-    
     const response = await fetchTimeout(requestURL, {
       timeout: TIME_OUT
     });
