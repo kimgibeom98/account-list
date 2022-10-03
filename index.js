@@ -43,7 +43,7 @@ async function loadTime() {
 
 async function getTime(){
   try {
-    const response = await fetchRequest(requestTimeURL);
+    const response = await fetchRequest(requestTimeURL, 'GET');
     loadTime();
     const post = await response.json()
     await viewTime(post);
@@ -61,7 +61,7 @@ getTime();
 
 async function getData() {
   try {
-    const response = await fetchRequest(requestURL);
+    const response = await fetchRequest(requestURL, 'GET');
     loadTime();
     const post = await response.json()
     await setUserName(post)
@@ -77,19 +77,17 @@ async function addMember(){
   } else {
     if (listCount.rows.length < PAGE_COUNT){
       try {
-        await fetch(requestURL, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
+          await fetchRequest(
+          requestURL,
+          'POST',
+          JSON.stringify({
             id: Number(targetCount.value),
             name: tragetName.value,
             age: Number(tragetAge.value),
             job : targetJob.value,
             email : tragetEmail.value
           }),
-        })
+        );
         loadTime();
         render();
       } catch (err){
@@ -125,19 +123,16 @@ async function onClick(event) {
     event.target.style.display = "none";
     event.target.previousSibling .style.display = "block";
     try {
-      await fetch(`${requestURL}/${Number(patchNum)}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+      await fetchRequest(
+        `${requestURL}/${Number(patchNum)}`, "PUT",
+        JSON.stringify({
           id: Number(targetCount.value),
           name : upName.value,
           age : Number(upAge.value),
           job : upJob.value,
           email : upemail.value
-        }),
-      })
+        })
+      )
       loadTime();
       render();
       alert("수정이 완료되었습니다.");
@@ -166,7 +161,7 @@ async function showList(val) {
   } else {
     targetList.innerHTML = '';
     try {
-      const response = await fetchRequest(requestURL);
+      const response = await fetchRequest(requestURL, 'GET');
       // const response = await fetch('http://localhost:3000/accoounts/name', {
       //   method: 'GET',
       // });
@@ -225,9 +220,11 @@ function searchResult(myJson, val){
   countTable.innerHTML = listCount.rows.length;
 }
 
-function fetchRequest(infoURL){
+function fetchRequest(infoURL, form, bodys){
   return fetch(infoURL, {
-    method: 'GET',
+    method: form,
+    headers: {"Content-Type": "application/json"},
+    body: bodys
   })
 }
 
