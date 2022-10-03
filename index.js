@@ -37,7 +37,7 @@ async function loadTime() {
     const post = await response.json();
     return post;
   } catch (err) {
-    alert('응답시간이 5초가 지났습니다.')
+    alert('응답시간이 지났습니다.')
   }
 }
 
@@ -145,9 +145,7 @@ async function onClick(event) {
 async function deleteData(num) {
   delList.style.display = 'none';
   try {
-    await fetch(`${requestURL}/${num}`, {
-      method: "DELETE",
-    })
+    await fetchRequest(`${requestURL}/${num}`, "DELETE")
     loadTime();
     render();
   } catch (err) {
@@ -224,7 +222,7 @@ function fetchRequest(infoURL, form, bodys){
   return fetch(infoURL, {
     method: form,
     headers: {"Content-Type": "application/json"},
-    body: bodys
+    body: bodys,
   })
 }
 
