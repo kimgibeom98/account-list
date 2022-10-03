@@ -16,6 +16,7 @@ const findClose = document.getElementById('close-time');
 const TIME_OUT = 5000;
 const PAGE_COUNT = 15;
 
+
 async function fetchTimeout(resource, options = {}) {
   const { timeout = TIME_OUT } = options;  
   const controller = new AbortController();
@@ -42,7 +43,7 @@ async function loadTime() {
 
 async function getTime(){
   try {
-    const response = await fetchOption(requestTimeURL);
+    const response = await fetchRequest(requestTimeURL);
     loadTime();
     const post = await response.json()
     await viewTime(post);
@@ -60,7 +61,7 @@ getTime();
 
 async function getData() {
   try {
-    const response = await fetchOption(requestURL);
+    const response = await fetchRequest(requestURL);
     loadTime();
     const post = await response.json()
     await setUserName(post)
@@ -69,7 +70,7 @@ async function getData() {
   }
 }
 
-async function requestData(){
+async function addMember(){
   const email = tragetEmail.value;
   if (!emailCheck(email)) {
     alert('email을 형식에 맞게 입력하세요.');
@@ -165,7 +166,7 @@ async function showList(val) {
   } else {
     targetList.innerHTML = '';
     try {
-      const response = await fetchOption(requestURL);
+      const response = await fetchRequest(requestURL);
       // const response = await fetch('http://localhost:3000/accoounts/name', {
       //   method: 'GET',
       // });
@@ -224,7 +225,7 @@ function searchResult(myJson, val){
   countTable.innerHTML = listCount.rows.length;
 }
 
-function fetchOption(infoURL){
+function fetchRequest(infoURL){
   return fetch(infoURL, {
     method: 'GET',
   })
