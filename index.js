@@ -60,10 +60,10 @@ function viewTime(myJson){
 getTime();
 
 async function getData() {
-  requestData(getExecutionCode())
+  requestData(render())
 }
 
-async function getExecutionCode(){
+async function render(){
   const response = await fetchRequest(requestURL, 'GET');
   loadTime();
   const post = await response.json()
@@ -103,7 +103,7 @@ async function postExecutionCode(){
     }),
   );
   loadTime();
-  render();
+  clearView();
 }
 
 async function onClick(event) {
@@ -145,7 +145,7 @@ async function putExecutionCode(patchNum, upName, upAge, upJob, upemail){
     })
   )
   loadTime();
-  render();
+  clearView();
   alert("수정이 완료되었습니다.");
 }
 
@@ -158,7 +158,7 @@ async function deleteData(num) {
 async function deleteExecutionCode(num){
   await fetchRequest(`${requestURL}/${num}`, "DELETE")
   loadTime();
-  render();
+  clearView();
 }
 
 async function showList(val) {
@@ -255,7 +255,7 @@ function emailCheck(email) {
   return (email !== '' && email !== 'undefined' && regex.test(email));
 }
 
-function render(){
+function clearView(){
   targetList.innerHTML = '';
   getData();
 }
