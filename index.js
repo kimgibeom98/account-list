@@ -42,14 +42,14 @@ async function loadTime() {
 }
 
 async function getTime(){
-  try {
-    const response = await fetchRequest(requestTimeURL, 'GET');
-    loadTime();
-    const post = await response.json()
-    await viewTime(post);
-  } catch (err) {
-    alert(err)
-  }
+  requestData(timeExecutionCode());
+}
+
+async function timeExecutionCode(){
+  const response = await fetchRequest(requestTimeURL, 'GET');
+  loadTime();
+  const post = await response.json()
+  await viewTime(post);
 }
 
 function viewTime(myJson){
@@ -60,13 +60,21 @@ function viewTime(myJson){
 getTime();
 
 async function getData() {
-  try {
-    const response = await fetchRequest(requestURL, 'GET');
-    loadTime();
-    const post = await response.json()
-    await setUserName(post)
-  } catch (err) {
-      alert(err);
+  requestData(getExecutionCode())
+}
+
+async function getExecutionCode(){
+  const response = await fetchRequest(requestURL, 'GET');
+  loadTime();
+  const post = await response.json()
+  await setUserName(post)
+}
+
+async function requestData(executiontype){
+  try{
+    executiontype
+  }catch(err){
+    alert(err);
   }
 }
 
@@ -76,27 +84,26 @@ async function addMember(){
     alert('email을 형식에 맞게 입력하세요.');
   } else {
     if (listCount.rows.length < PAGE_COUNT){
-      try {
-          await fetchRequest(
-          requestURL,
-          'POST',
-          JSON.stringify({
-            id: Number(targetCount.value),
-            name: tragetName.value,
-            age: Number(tragetAge.value),
-            job : targetJob.value,
-            email : tragetEmail.value
-          }),
-        );
-        loadTime();
-        render();
-      } catch (err){
-        alert(err);
-      }
+      requestData(postExecutionCode())
     } else {
       alert(`회원이 ${PAGE_COUNT}명 이상입니다.`);
     }
   }
+}
+async function postExecutionCode(){
+  await fetchRequest(
+    requestURL,
+    'POST',
+    JSON.stringify({
+      id: Number(targetCount.value),
+      name: tragetName.value,
+      age: Number(tragetAge.value),
+      job : targetJob.value,
+      email : tragetEmail.value
+    }),
+  );
+  loadTime();
+  render();
 }
 
 async function onClick(event) {
@@ -122,35 +129,36 @@ async function onClick(event) {
     const upemail = updateTr.querySelector('#up-email');
     event.target.style.display = "none";
     event.target.previousSibling .style.display = "block";
-    try {
-      await fetchRequest(
-        `${requestURL}/${Number(patchNum)}`, "PUT",
-        JSON.stringify({
-          id: Number(targetCount.value),
-          name : upName.value,
-          age : Number(upAge.value),
-          job : upJob.value,
-          email : upemail.value
-        })
-      )
-      loadTime();
-      render();
-      alert("수정이 완료되었습니다.");
-    } catch (err) {
-      alert(err);
-    }
+    requestData(putExecutionCode(patchNum, upName, upAge, upJob, upemail))
   }
 }
 
+async function putExecutionCode(patchNum, upName, upAge, upJob, upemail){
+  await fetchRequest(
+    `${requestURL}/${Number(patchNum)}`, "PUT",
+    JSON.stringify({
+      id: Number(targetCount.value),
+      name : upName.value,
+      age : Number(upAge.value),
+      job : upJob.value,
+      email : upemail.value
+    })
+  )
+  loadTime();
+  render();
+  alert("수정이 완료되었습니다.");
+}
+
+
 async function deleteData(num) {
   delList.style.display = 'none';
-  try {
-    await fetchRequest(`${requestURL}/${num}`, "DELETE")
-    loadTime();
-    render();
-  } catch (err) {
-    alert(err);
-  }
+  requestData(deleteExecutionCode(num));
+}
+
+async function deleteExecutionCode(num){
+  await fetchRequest(`${requestURL}/${num}`, "DELETE")
+  loadTime();
+  render();
 }
 
 async function showList(val) {
