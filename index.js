@@ -69,37 +69,39 @@ async function getData() {
   }
 }
 
-async function postData(event) {
-  if (event.target.getAttribute('class') === 'submit-btn') {
-    const email = tragetEmail.value;
-    if (!emailCheck(email)) {
-      alert('email을 형식에 맞게 입력하세요.');
-    } else {
-      if (listCount.rows.length < PAGE_COUNT){
-        try {
-          await fetch(requestURL, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              id: Number(targetCount.value),
-              name: tragetName.value,
-              age: Number(tragetAge.value),
-              job : targetJob.value,
-              email : tragetEmail.value
-            }),
-          })
-          loadTime();
-          render();
-        } catch (err){
-          alert(err);
-        }
-      } else {
-        alert(`회원이 ${PAGE_COUNT}명 이상입니다.`);
+async function requestData(){
+  const email = tragetEmail.value;
+  if (!emailCheck(email)) {
+    alert('email을 형식에 맞게 입력하세요.');
+  } else {
+    if (listCount.rows.length < PAGE_COUNT){
+      try {
+        await fetch(requestURL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: Number(targetCount.value),
+            name: tragetName.value,
+            age: Number(tragetAge.value),
+            job : targetJob.value,
+            email : tragetEmail.value
+          }),
+        })
+        loadTime();
+        render();
+      } catch (err){
+        alert(err);
       }
+    } else {
+      alert(`회원이 ${PAGE_COUNT}명 이상입니다.`);
     }
-  } else if (event.target.id === 'search-btn') {
+  }
+}
+
+async function postData(event) {
+  if (event.target.id === 'search-btn') {
     showList(searchInput.value)
   } else if (event.target.getAttribute('class') === 'correction-data') {
     event.target.style.display = "none";
@@ -168,7 +170,10 @@ async function showList(val) {
   } else {
     targetList.innerHTML = '';
     try {
-      const response = await fetchOption(requestURL);
+      // const response = await fetchOption(requestURL);
+      const response = await fetch('http://localhost:3000/accoounts/name', {
+        method: 'GET',
+      });
       loadTime();
       const post = await response.json()
       await searchResult(post, val);
