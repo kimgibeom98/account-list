@@ -84,8 +84,8 @@
                     <option value="email">이메일</option>
                 </select>
                 <input type="text" id="search">
-                <button type="button" id="search-btn">Search</button>
-                <button type="button" id="reset-btn">초기화</button>
+                <button type="button" id="search-btn" onclick="showList(searchInput.value)">Search</button>
+                <button type="button" id="reset-btn" onclick="render(); searchInput.value = '';">초기화</button>
             </div>
         </div>
         <div id="del-pop">

@@ -100,10 +100,8 @@ async function requestData(){
   }
 }
 
-async function postData(event) {
-  if (event.target.id === 'search-btn') {
-    showList(searchInput.value)
-  } else if (event.target.getAttribute('class') === 'correction-data') {
+async function onClick(event) {
+  if (event.target.getAttribute('class') === 'correction-data') {
     event.target.style.display = "none";
     event.target.nextSibling.style.display = "block";
     const updateTr = event.target.parentNode.parentNode.parentNode.parentNode; 
@@ -145,9 +143,6 @@ async function postData(event) {
     } catch (err) {
       alert(err);
     }
-  } else if (event.target.id === 'reset-btn') {
-    render();
-    searchInput.value = '';
   }
 }
 
@@ -170,10 +165,10 @@ async function showList(val) {
   } else {
     targetList.innerHTML = '';
     try {
-      // const response = await fetchOption(requestURL);
-      const response = await fetch('http://localhost:3000/accoounts/name', {
-        method: 'GET',
-      });
+      const response = await fetchOption(requestURL);
+      // const response = await fetch('http://localhost:3000/accoounts/name', {
+      //   method: 'GET',
+      // });
       loadTime();
       const post = await response.json()
       await searchResult(post, val);
@@ -261,7 +256,7 @@ function render(){
   getData();
 }
 
-document.addEventListener('click', postData)
+document.addEventListener('click', onClick)
 
 
 
