@@ -29,82 +29,72 @@ async function fetchTimeout(resource, options = {}) {
   return response;
 }
 
-async function loadTime() {
+async function checkTime() {
   try {
-    const response = await fetchTimeout(requestURL, {
+    await fetchTimeout(requestURL, {
       timeout: TIME_OUT
     });
-    const post = await response.json();
-    return post;
+    getTime();
   } catch (err) {
-    alert('응답시간이 지났습니다.')
+    alert(err)
   }
 }
+checkTime();
 
 async function getTime(){
-  requestData(timeExecutionCode());
-}
-
-async function timeExecutionCode(){
-  const response = await fetchRequest(requestTimeURL, 'GET');
-  loadTime();
-  const post = await response.json()
-  await viewTime(post);
+  try {
+    const response = await fetchRequest(requestTimeURL, 'GET');
+    const post = await response.json()
+    await viewTime(post);
+  } catch(err) {
+    alert(err)
+  }
 }
 
 function viewTime(myJson){
   findOpen.innerHTML += `${myJson.open}`
   findClose.innerHTML += `${myJson.close}`
-  getData();
-}
-getTime();
-
-async function getData() {
-  requestData(render())
+  showGetdata();
 }
 
-async function render(){
-  const response = await fetchRequest(requestURL, 'GET');
-  loadTime();
-  const post = await response.json()
-  await setUserName(post)
-}
-
-async function requestData(executiontype){
-  try{
-    executiontype
-  }catch(err){
-    alert(err);
+async function showGetdata() {
+  try {
+    const response = await fetchRequest(requestURL, 'GET');
+    const post = await response.json()
+    await setUserNameWithCount(post)
+  } catch(err) {
+    alert(err)
   }
 }
 
-async function addMember(){
+async function addData(){
   const email = tragetEmail.value;
   if (!emailCheck(email)) {
     alert('email을 형식에 맞게 입력하세요.');
   } else {
     if (listCount.rows.length < PAGE_COUNT){
-      requestData(postExecutionCode())
+      try {
+        await fetchRequest(
+          requestURL,
+          'POST',
+          JSON.stringify({
+            id: Number(targetCount.value),
+            name: tragetName.value,
+            age: Number(tragetAge.value),
+            job : targetJob.value,
+            email : tragetEmail.value
+          }),
+        );
+        clearView();
+      } catch(err) {
+        alert(err)
+      }
     } else {
       alert(`회원이 ${PAGE_COUNT}명 이상입니다.`);
     }
   }
 }
-async function postExecutionCode(){
-  await fetchRequest(
-    requestURL,
-    'POST',
-    JSON.stringify({
-      id: Number(targetCount.value),
-      name: tragetName.value,
-      age: Number(tragetAge.value),
-      job : targetJob.value,
-      email : tragetEmail.value
-    }),
-  );
-  loadTime();
-  clearView();
-}
+
 
 async function onClick(event) {
   if (event.target.getAttribute('class') === 'correction-data') {
@@ -129,36 +119,45 @@ async function onClick(event) {
     const upemail = updateTr.querySelector('#up-email');
     event.target.style.display = "none";
     event.target.previousSibling .style.display = "block";
-    requestData(putExecutionCode(patchNum, upName, upAge, upJob, upemail))
+    try {
+      await fetchRequest(
+        `${requestURL}/${Number(patchNum)}`, "PUT",
+        JSON.stringify({
+          id: Number(targetCount.value),
+          name : upName.value,
+          age : Number(upAge.value),
+          job : upJob.value,
+          email : upemail.value
+        })
+      )
+      clearView();
+      alert("수정이 완료되었습니다.");
+    } catch(err) {
+      alert(err)
+    }
   }
 }
 
-async function putExecutionCode(patchNum, upName, upAge, upJob, upemail){
-  await fetchRequest(
-    `${requestURL}/${Number(patchNum)}`, "PUT",
-    JSON.stringify({
-      id: Number(targetCount.value),
-      name : upName.value,
-      age : Number(upAge.value),
-      job : upJob.value,
-      email : upemail.value
-    })
-  )
-  loadTime();
-  clearView();
-  alert("수정이 완료되었습니다.");
-}
-
-
 async function deleteData(num) {
   delList.style.display = 'none';
-  requestData(deleteExecutionCode(num));
+  try {
+    await fetchRequest(`${requestURL}/${num}`, "DELETE")
+    clearView();
+  } catch(err) {
+    alert(err)
+  }
 }
 
-async function deleteExecutionCode(num){
-  await fetchRequest(`${requestURL}/${num}`, "DELETE")
-  loadTime();
-  clearView();
+function findName(targetNum) {
+  const delName = document.querySelector(`.target-name${targetNum}`);
+  const delId = delName.previousSibling.dataset.index
+  const delNameval = document.querySelector(`.target-name${targetNum} > input`);
+  delList.style.display = 'block';
+  delList.innerHTML = `<p>${delNameval.value} 님을 삭제하시겠습니까?</p><div><button type="button" onclick="deleteData(${delId})" class="y-btn">예</button><button type="button" class="n-btn">아니요</button></div>`
+  const delPop = document.querySelector('.n-btn');
+  delPop.onclick = function () {
+    delList.style.display = 'none';
+  }
 }
 
 async function importingDC(val) {
@@ -181,19 +180,6 @@ async function importingDC(val) {
     }
   }
 }
-
-function findName(targetNum) {
-  const delName = document.querySelector(`.target-name${targetNum}`);
-  const delId = delName.previousSibling.dataset.index
-  const delNameval = document.querySelector(`.target-name${targetNum} > input`);
-  delList.style.display = 'block';
-  delList.innerHTML = `<p>${delNameval.value} 님을 삭제하시겠습니까?</p><div><button type="button" onclick="deleteData(${delId})" class="y-btn">예</button><button type="button" class="n-btn">아니요</button></div>`
-  const delPop = document.querySelector('.n-btn');
-  delPop.onclick = function () {
-    delList.style.display = 'none';
-  }
-}
-
 
 function showSearchResult(myJson, val){
   let k = 1;
@@ -223,15 +209,15 @@ function showSearchResult(myJson, val){
   countTable.innerHTML = listCount.rows.length;
 }
 
-function fetchRequest(infoURL, form, bodys){
-  return fetch(infoURL, {
+async function fetchRequest(infoURL, form, bodys){
+  return await fetch(infoURL, {
     method: form,
     headers: {"Content-Type": "application/json"},
-    body: bodys,
+    body: bodys
   })
 }
 
-function setUserName(myJson){
+function setUserNameWithCount(myJson){
   let j = 1;
   for (let i = 0; i < myJson.length; i++) {
     if (myJson.length - 1 === i) {
@@ -254,7 +240,7 @@ function emailCheck(email) {
 
 function clearView(){
   targetList.innerHTML = '';
-  getData();
+  showGetdata();
 }
 
 document.addEventListener('click', onClick)
