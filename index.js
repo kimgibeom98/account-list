@@ -161,19 +161,20 @@ async function deleteExecutionCode(num){
   clearView();
 }
 
-async function showList(val) {
+async function importingDC(val) {
   if (searchType.value === '' || searchType.value === '선택') {
     alert("분류를 선택하세요"); 
   } else {
     targetList.innerHTML = '';
+    let response;
     try {
-      const response = await fetchRequest(requestURL, 'GET');
-      // const response = await fetch('http://localhost:3000/accoounts/name', {
-      //   method: 'GET',
-      // });
-      loadTime();
+      if(searchType.value === 'age' || searchType.value === 'job'){
+        response = await fetchRequest(`http://localhost:3000/accoounts/?${searchType.value}=${val}`, 'GET');
+      }else{
+        response = await fetchRequest(`http://localhost:3000/accoounts/?${searchType.value}_like=${val}`, 'GET')
+      }
       const post = await response.json()
-      await searchResult(post, val);
+      await showSearchResult(post, val);
     } catch (err) {
       alert(err);
       countTable.innerHTML = listCount.rows.length;
