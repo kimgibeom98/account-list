@@ -1,3 +1,5 @@
+'use strict'
+
 const requestURL = 'http://localhost:3000/accoounts';
 const requestTimeURL = 'http://localhost:3000/businessHours';
 const targetList = document.getElementById('target');
@@ -39,7 +41,6 @@ async function checkTime() {
     alert(err)
   }
 }
-checkTime();
 
 async function getTime() {
   try {
@@ -173,7 +174,7 @@ async function importingDC(val) {
         response = await fetchRequest(`http://localhost:3000/accoounts/?${searchType.value}_like=${val}`, 'GET')
       }
       post = await response.json()
-      await showSearchResult(post, val);
+      showSearchResult(post, val);
     } catch(err) {
       alert(err);
       countTable.innerHTML = listCount.rows.length;
@@ -184,6 +185,9 @@ async function importingDC(val) {
 function showSearchResult(arrData, val) {
   let k = 1;
   for (let i = 0; i < arrData.length; i++) {
+    if (arrData.length === 0) {
+      throw new Error('회원이 존재하지 않습니다.');
+    }
     if (searchType.value === "name") {
       const name = arrData[i].name.replace(val,`<span style="color: blue;">${val}</span>`)
       targetList.innerHTML += `<tr><td data-index=${arrData[i].id}>${k}</td><td class="target-name${i}"><span class="view-data">${name}</span><input class="correction-input" id="up-name" type="text" readonly value="${arrData[i].name}"></td><td><span class="view-data">${arrData[i].age}</span><input class="correction-input" id="up-age" type="text" readonly value="${arrData[i].age}"></td><td><span class="view-data">${arrData[i].job}</span><input class="correction-input" id="up-job" type="text" readonly value="${arrData[i].job}"></td><td><div class="button-box"><span><span class="view-data">${arrData[i].email}</span><input class="correction-input" id="up-email" type="text" readonly value="${arrData[i].email}"></span><div><button class="correction-data" type="button">수정</button><button class="up-data" type="button">완료</button><button onclick="findNamepop(${i});" type="button" class="del-btn">삭제</button></div></div></td></tr>`;
@@ -200,23 +204,21 @@ function showSearchResult(arrData, val) {
     }
     k++;
   }
-  if (listCount.rows.length === 0) {
-    throw new Error('회원이 존재하지 않습니다.');
-  }
+
   countTable.innerHTML = listCount.rows.length;
 }
 
-async function fetchRequest(infoURL, type, dataInfo) {
+async function fetchRequest(infoURL, method, body) {
   return await fetch(infoURL, {
-    method: type,
+    method,
     headers: {"Content-Type": "application/json"},
-    body: dataInfo
+    body,
   })
 }
 
 function showUserlistWithCount(arrData) {
   let j = 1;
-  let innerTag;
+  let innerTag = '';
   for (let i = 0; i < arrData.length; i++) {
     if (arrData.length - 1 === i) {
       targetCount.value = Number(arrData[i].id) + 1;
@@ -224,12 +226,11 @@ function showUserlistWithCount(arrData) {
     innerTag += `<tr><td data-index=${arrData[i].id}>${j}</td><td class="target-name${i}"><span class="view-data">${arrData[i].name}</span><input class="correction-input" id="up-name" type="text" readonly value="${arrData[i].name}"></td><td><span class="view-data">${arrData[i].age}</span><input class="correction-input" id="up-age" type="text" readonly value="${arrData[i].age}"></td><td><span class="view-data">${arrData[i].job}</span><input class="correction-input" id="up-job" type="text" readonly value="${arrData[i].job}"></td><td><div class="button-box"><span><span class="view-data">${arrData[i].email}</span><input class="correction-input" id="up-email" type="text" readonly value="${arrData[i].email}"></span><div><button class="correction-data" type="button">수정</button><button class="up-data" type="button">완료</button><button onclick="findNamepop(${i});" type="button" class="del-btn">삭제</button></div></div></td></tr>`;
     j++;
   }
-  let resultInnertag = innerTag.replace('undefined', '')
-  targetList.innerHTML = resultInnertag;
+  targetList.innerHTML = innerTag;
   countTable.innerHTML = listCount.rows.length;
 }
 
-function sendValue(target) {
+function setSearchTypeValue(target) {
   searchType.value = target.value;
 }
 
@@ -242,6 +243,8 @@ function clearView() {
   targetList.innerHTML = '';
   showGetdata();
 }
+
+checkTime();
 
 document.addEventListener('click', onClick)
 
