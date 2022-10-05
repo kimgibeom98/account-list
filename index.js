@@ -15,7 +15,7 @@ const findOpen = document.getElementById('open-time');
 const findClose = document.getElementById('close-time');
 const TIME_OUT = 5000;
 const PAGE_COUNT = 15;
-
+let post;
 
 async function fetchTimeout(resource, options = {}) {
   const { timeout = TIME_OUT } = options;  
@@ -41,33 +41,33 @@ async function checkTime() {
 }
 checkTime();
 
-async function getTime(){
+async function getTime() {
   try {
     const response = await fetchRequest(requestTimeURL, 'GET');
-    const post = await response.json()
+    post = await response.json()
     await viewTime(post);
   } catch(err) {
     alert(err)
   }
 }
 
-function viewTime(myJson){
-  findOpen.innerHTML += `${myJson.open}`
-  findClose.innerHTML += `${myJson.close}`
+function viewTime(arrData) {
+  findOpen.innerHTML += `${arrData.open}`
+  findClose.innerHTML += `${arrData.close}`
   showGetdata();
 }
 
 async function showGetdata() {
   try {
     const response = await fetchRequest(requestURL, 'GET');
-    const post = await response.json()
-    await setUserNameWithCount(post)
+    post = await response.json()
+    await showUserlistWithCount(post)
   } catch(err) {
     alert(err)
   }
 }
 
-async function addData(){
+async function addData() {
   const email = tragetEmail.value;
   if (!emailCheck(email)) {
     alert('email을 형식에 맞게 입력하세요.');
@@ -148,7 +148,7 @@ async function deleteData(num) {
   }
 }
 
-function findName(targetNum) {
+function findNamepop(targetNum) {
   const delName = document.querySelector(`.target-name${targetNum}`);
   const delId = delName.previousSibling.dataset.index
   const delNameval = document.querySelector(`.target-name${targetNum} > input`);
@@ -167,14 +167,14 @@ async function importingDC(val) {
     targetList.innerHTML = '';
     let response;
     try {
-      if(searchType.value === 'age' || searchType.value === 'job'){
+      if (searchType.value === 'age' || searchType.value === 'job') {
         response = await fetchRequest(`http://localhost:3000/accoounts/?${searchType.value}=${val}`, 'GET');
-      }else{
+      } else {
         response = await fetchRequest(`http://localhost:3000/accoounts/?${searchType.value}_like=${val}`, 'GET')
       }
-      const post = await response.json()
+      post = await response.json()
       await showSearchResult(post, val);
-    } catch (err) {
+    } catch(err) {
       alert(err);
       countTable.innerHTML = listCount.rows.length;
     }
@@ -206,27 +206,30 @@ function showSearchResult(arrData, val) {
   countTable.innerHTML = listCount.rows.length;
 }
 
-async function fetchRequest(infoURL, form, bodys){
+async function fetchRequest(infoURL, type, dataInfo) {
   return await fetch(infoURL, {
-    method: form,
+    method: type,
     headers: {"Content-Type": "application/json"},
-    body: bodys
+    body: dataInfo
   })
 }
 
-function setUserNameWithCount(myJson){
+function showUserlistWithCount(arrData) {
   let j = 1;
-  for (let i = 0; i < myJson.length; i++) {
-    if (myJson.length - 1 === i) {
-      targetCount.value = Number(myJson[i].id) + 1;
+  let innerTag;
+  for (let i = 0; i < arrData.length; i++) {
+    if (arrData.length - 1 === i) {
+      targetCount.value = Number(arrData[i].id) + 1;
     }
-    targetList.innerHTML += `<tr><td data-index=${myJson[i].id}>${j}</td><td class="target-name${i}"><span class="view-data">${myJson[i].name}</span><input class="correction-input" id="up-name" type="text" readonly value="${myJson[i].name}"></td><td><span class="view-data">${myJson[i].age}</span><input class="correction-input" id="up-age" type="text" readonly value="${myJson[i].age}"></td><td><span class="view-data">${myJson[i].job}</span><input class="correction-input" id="up-job" type="text" readonly value="${myJson[i].job}"></td><td><div class="button-box"><span><span class="view-data">${myJson[i].email}</span><input class="correction-input" id="up-email" type="text" readonly value="${myJson[i].email}"></span><div><button class="correction-data" type="button">수정</button><button class="up-data" type="button">완료</button><button onclick="findName(${i});" type="button" class="del-btn">삭제</button></div></div></td></tr>`;
+    innerTag += `<tr><td data-index=${arrData[i].id}>${j}</td><td class="target-name${i}"><span class="view-data">${arrData[i].name}</span><input class="correction-input" id="up-name" type="text" readonly value="${arrData[i].name}"></td><td><span class="view-data">${arrData[i].age}</span><input class="correction-input" id="up-age" type="text" readonly value="${arrData[i].age}"></td><td><span class="view-data">${arrData[i].job}</span><input class="correction-input" id="up-job" type="text" readonly value="${arrData[i].job}"></td><td><div class="button-box"><span><span class="view-data">${arrData[i].email}</span><input class="correction-input" id="up-email" type="text" readonly value="${arrData[i].email}"></span><div><button class="correction-data" type="button">수정</button><button class="up-data" type="button">완료</button><button onclick="findNamepop(${i});" type="button" class="del-btn">삭제</button></div></div></td></tr>`;
     j++;
   }
+  let resultInnertag = innerTag.replace('undefined', '')
+  targetList.innerHTML = resultInnertag;
   countTable.innerHTML = listCount.rows.length;
 }
 
-function showValue(target) {
+function sendValue(target) {
   searchType.value = target.value;
 }
 
@@ -235,7 +238,7 @@ function emailCheck(email) {
   return (email !== '' && email !== 'undefined' && regex.test(email));
 }
 
-function clearView(){
+function clearView() {
   targetList.innerHTML = '';
   showGetdata();
 }
