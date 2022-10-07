@@ -1,5 +1,16 @@
 body{position: relative; margin: 0; padding: 0;}
-.wrap{width: 700px; margin: 0 auto;}
+input, select { vertical-align:top;font-family: inherit; font-size: inherit; }
+table{
+    margin:0;
+    padding:0;
+    border:0;
+    outline:0;
+    font-size:100%;
+    letter-spacing: 0;
+    vertical-align:baseline;
+    background:transparent;
+}
+.wrap{width: 800px; margin: 0 auto;}
 h1{font-size: 35px; margin-bottom: 5px;}
 .insert-info{border: 1px solid #e3e3e3; margin-bottom: 20px; border-radius: 7px; width: 100%;}
 .insert-info > div > h2{font-size: 15px; margin: 0; padding: 10px 0 10px 15px; background-color: #f5f5f5;}
@@ -15,28 +26,31 @@ h1{font-size: 35px; margin-bottom: 5px;}
 
 #target > tr:nth-of-type(odd) td{background-color: #f9f9f9;}
 #target > tr > td{ vertical-align: middle; font-size: 13px; color: #333333; height: 30px; box-sizing: border-box; padding-left: 10px; text-align: left;}
+#target > tr > td > span,
+#target > tr > td > input{ font-size: 13px; box-sizing: border-box;}
 #target > tr > td:first-of-type > span,
-#target > tr > td:first-of-type > input{width: 100%; font-size: 13px;}
-#target > tr > td:first-of-type{width: 81px; box-sizing: border-box;}
+#target > tr > td:first-of-type > input{width: 123.34px;}
+#target > tr > td:first-of-type{width: 118px;}
 #target > tr > td:nth-of-type(2) > span,
-#target > tr > td:nth-of-type(2) > input{width: 100%; font-size: 13px;}
-#target > tr > td:nth-of-type(2){width: 198px; box-sizing: border-box;}
+#target > tr > td:nth-of-type(2) > input{width: 87px;}
+#target > tr > td:nth-of-type(2){width: 175px;}
 #target > tr > td:nth-of-type(3) > span,
-#target > tr > td:nth-of-type(3) > input{width: 100%; font-size: 13px;}
-#target > tr > td:nth-of-type(3){width: 115px; box-sizing: border-box;}
+#target > tr > td:nth-of-type(3) > input{width: 129.91px;}
+#target > tr > td:nth-of-type(3){width: 115px;}
 #target > tr > td:nth-of-type(4) > span,
-#target > tr > td:nth-of-type(4) > input{width: 100%; font-size: 13px;}
-#target > tr > td:nth-of-type(4){width: 204px; box-sizing: border-box;}
-#target > tr > td:nth-of-type(5){width: 300px;}
+#target > tr > td:nth-of-type(4) > input{width: 113.98px;}
+#target > tr > td:nth-of-type(4){width: 280.36px;}
+#target > tr > td:nth-of-type(5){width: 358px;}
 #target > tr > td input{border: 1px solid #fff;}
 #target > tr > td input:focus{outline: none;}
 #target > tr:nth-of-type(odd) td input{border: 1px solid #f9f9f9; background-color: #f9f9f9;}
-.list-table > thead tr th:first-of-type{width: 57.64px;}
-.list-table > thead tr th:nth-of-type(2){width: 120px;}
-.list-table > thead tr th:nth-of-type(3){width: 85px;}
-.list-table > thead tr th:nth-of-type(4){width: 155px;}
-.list-table > thead tr th:nth-of-type(5){width: 271.36px;}
+.list-table > thead tr th:first-of-type{width: 50.64px;}
+.list-table > thead tr th:nth-of-type(2){width: 109px;}
+.list-table > thead tr th:nth-of-type(3){width: 131px;}
+.list-table > thead tr th:nth-of-type(4){width: 160px;}
+.list-table > thead tr th:nth-of-type(5){width: 251.36px;}
 .button-box{display: flex; justify-content: space-between;}
+.button-box > span{width: 63%; max-width: 164px;}
 .button-box > div{display: flex;}
 .button-box > div button{border: 1px solid #e3e3e3; background-color: white; cursor: pointer; color: #333333;}
 .del-btn{margin-left: 5px;}
@@ -54,9 +68,9 @@ h1{font-size: 35px; margin-bottom: 5px;}
 #del-pop > div > button{border: 1px solid #e3e3e3; height: 25px; background-color: white; color: #333333; font-weight: 500; cursor: pointer; width: 54px;}
 #del-pop > div > button:last-of-type{margin-left: 5px;}
 .up-data{display: none;}
-.view-data,
+.view-data{border: 1px solid #fff; display: inline-block;}
 .correction-data{display: block;}
-.correction-input{display: none;}
+.correction-input{display: none; width: 170px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; height: 19px; box-sizing: border-box; padding: 0;}
 #reset-btn{margin-left: 5px;}
 .time-box{position: fixed; right: 22%; top: 73px; border: 1px solid #ddd; padding: 15px;}
 .time-box > ul{padding: 0; margin: 0;}

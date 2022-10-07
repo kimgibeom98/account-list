@@ -12,7 +12,6 @@ const delList = document.getElementById('del-pop');
 const targetCount = document.getElementById('num');
 const countTable = document.getElementById('count-list');
 const listCount = document.getElementById('table-count');
-const searchInput = document.getElementById('search');
 const searchType = document.getElementById('search-type');
 const findOpen = document.getElementById('open-time');
 const findClose = document.getElementById('close-time');
@@ -105,7 +104,7 @@ function entcrValueWithstyleChange(evt){
   const noneSpan = updateTr.querySelectorAll('.view-data');
   for (let i = 0; i < updateInput.length; i++) {
     noneSpan[i].style.display = "none"
-    updateInput[i].style.cssText = "display : inline-block; border: 1px solid #888; background: #fff";
+    updateInput[i].style.cssText = "display : block; border: 1px solid #888; background: #fff";
     updateInput[i].readOnly  = false;
   }
 }
