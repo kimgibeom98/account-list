@@ -1,7 +1,8 @@
 'use strict'
 
 const requestURL = 'http://localhost:3000/accoounts';
-const requestTimeURL = 'http://localhost:3000/businessHours';
+const END_POINT = 'http://localhost'
+const PORT = 3000
 const targetList = document.getElementById('target');
 const tragetName = document.getElementById('name');
 const targetJob = document.getElementById('job');
@@ -17,7 +18,7 @@ const findOpen = document.getElementById('open-time');
 const findClose = document.getElementById('close-time');
 const TIME_OUT = 5000;
 const PAGE_COUNT = 15;
-let post;
+let accounts;
 
 async function fetchTimeout(resource, options = {}) {
   const { timeout = TIME_OUT } = options;  
@@ -44,9 +45,9 @@ async function checkTime() {
 
 async function getTime() {
   try {
-    const response = await fetchRequest(requestTimeURL, 'GET');
-    post = await response.json()
-    await viewTime(post);
+    const response = await fetchRequest("businessHours", 'GET');
+    accounts = await response.json()
+    await viewTime(accounts);
   } catch(err) {
     alert(err)
   }
@@ -60,9 +61,9 @@ function viewTime(arrData) {
 
 async function showGetdata() {
   try {
-    const response = await fetchRequest(requestURL, 'GET');
-    post = await response.json()
-    await showUserlistWithCount(post)
+    const response = await fetchRequest("accoounts", 'GET');
+    accounts = await response.json()
+    await showUserlistWithCount(accounts)
   } catch(err) {
     alert(err)
   }
@@ -76,7 +77,7 @@ async function addData() {
     if (listCount.rows.length < PAGE_COUNT){
       try {
         await fetchRequest(
-          requestURL,
+          "accoounts",
           'POST',
           JSON.stringify({
             id: Number(targetCount.value),
@@ -120,7 +121,7 @@ async function ReviseDataWithstyleChange(evt){
     evt.previousSibling.style.display = "block";
     try {
       await fetchRequest(
-        `${requestURL}/${Number(patchNum)}`, "PUT",
+        `${"accoounts"}/${Number(patchNum)}`, "PUT",
         JSON.stringify({
           id: Number(targetCount.value),
           name : upName.value,
@@ -139,7 +140,7 @@ async function ReviseDataWithstyleChange(evt){
 async function deleteData(num) {
   delList.style.display = 'none';
   try {
-    await fetchRequest(`${requestURL}/${num}`, "DELETE")
+    await fetchRequest(`${"accoounts"}/${num}`, "DELETE")
     clearView();
   } catch(err) {
     alert(err)
@@ -170,8 +171,8 @@ async function importingDC(val) {
       } else {
         response = await fetchRequest(`http://localhost:3000/accoounts/?${searchType.value}_like=${val}`, 'GET')
       }
-      post = await response.json()
-      showSearchResult(post, val);
+      accounts = await response.json()
+      showSearchResult(accounts, val);
     } catch(err) {
       alert(err);
       countTable.innerHTML = listCount.rows.length;
@@ -204,9 +205,12 @@ function showSearchResult(arrData, val) {
 
   countTable.innerHTML = listCount.rows.length;
 }
+function getEndpoint(endpoint) {
+  return `${END_POINT}:${PORT}/${endpoint}`
+}
 
 async function fetchRequest(infoURL, method, body) {
-  return await fetch(infoURL, {
+  return await fetch(getEndpoint(infoURL), {
     method,
     headers: {"Content-Type": "application/json"},
     body,
