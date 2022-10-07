@@ -164,13 +164,8 @@ async function importingDC(val) {
     alert("분류를 선택하세요"); 
   } else {
     targetList.innerHTML = '';
-    let response;
     try {
-      if (searchType.value === 'age' || searchType.value === 'job') {
-        response = await fetchRequest(`http://localhost:3000/accoounts/?${searchType.value}=${val}`, 'GET');
-      } else {
-        response = await fetchRequest(`http://localhost:3000/accoounts/?${searchType.value}_like=${val}`, 'GET')
-      }
+      const response = (searchType.value === 'age' || searchType.value === 'job') ? await fetchRequest(`accoounts/?${searchType.value}=${val}`, 'GET') : await fetchRequest(`accoounts/?${searchType.value}_like=${val}`, 'GET')
       accounts = await response.json()
       showSearchResult(accounts, val);
     } catch(err) {
