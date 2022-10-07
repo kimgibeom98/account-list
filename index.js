@@ -97,6 +97,7 @@ async function addData() {
 }
 
 function entcrValueWithstyleChange(evt){
+  console.log('test')
   evt.style.display = "none"
   evt.nextSibling.style.display = "block";
   const updateTr = evt.parentNode.parentNode.parentNode.parentNode; 
