@@ -87,7 +87,7 @@ async function addData() {
             email : tragetEmail.value
           }),
         );
-        clearView();
+        latestDatashow();
       } catch(err) {
         alert(err)
       }
@@ -130,7 +130,7 @@ async function ReviseDataWithstyleChange(evt){
           email : upemail.value
         })
       )
-      clearView();
+      latestDatashow();
       alert("수정이 완료되었습니다.");
     } catch(err) {
       alert(err)
@@ -141,7 +141,7 @@ async function deleteData(num) {
   delList.style.display = 'none';
   try {
     await fetchRequest(`${"accoounts"}/${num}`, "DELETE")
-    clearView();
+    latestDatashow();
   } catch(err) {
     alert(err)
   }
@@ -176,28 +176,25 @@ async function importingDC(val) {
 }
 
 function showSearchResult(arrData, val) {
-  let k = 1;
+  if (arrData.length === 0) {
+    throw new Error('회원이 존재하지 않습니다.');
+  }
   for (let i = 0; i < arrData.length; i++) {
-    if (arrData.length === 0) {
-      throw new Error('회원이 존재하지 않습니다.');
-    }
     if (searchType.value === "name") {
       const name = arrData[i].name.replace(val,`<span style="color: blue;">${val}</span>`)
-      targetList.innerHTML += `<tr><td data-index=${arrData[i].id}>${k}</td><td class="target-name${i}"><span class="view-data">${name}</span><input class="correction-input" id="up-name" type="text" readonly value="${arrData[i].name}"></td><td><span class="view-data">${arrData[i].age}</span><input class="correction-input" id="up-age" type="text" readonly value="${arrData[i].age}"></td><td><span class="view-data">${arrData[i].job}</span><input class="correction-input" id="up-job" type="text" readonly value="${arrData[i].job}"></td><td><div class="button-box"><span><span class="view-data">${arrData[i].email}</span><input class="correction-input" id="up-email" type="text" readonly value="${arrData[i].email}"></span><div><button class="correction-data" onclick="entcrValueWithstyleChange(this);" type="button">수정</button><button class="up-data" onclick="ReviseDataWithstyleChange(this);" type="button">완료</button><button onclick="findNamepop(${i});" type="button" class="del-btn">삭제</button></div></div></td></tr>`;
+      targetList.innerHTML += `<tr><td data-index=${arrData[i].id}>${i + 1}</td><td class="target-name${i}"><span class="view-data">${name}</span><input class="correction-input" id="up-name" type="text" readonly value="${arrData[i].name}"></td><td><span class="view-data">${arrData[i].age}</span><input class="correction-input" id="up-age" type="text" readonly value="${arrData[i].age}"></td><td><span class="view-data">${arrData[i].job}</span><input class="correction-input" id="up-job" type="text" readonly value="${arrData[i].job}"></td><td><div class="button-box"><span><span class="view-data">${arrData[i].email}</span><input class="correction-input" id="up-email" type="text" readonly value="${arrData[i].email}"></span><div><button class="correction-data" onclick="entcrValueWithstyleChange(this);" type="button">수정</button><button class="up-data" onclick="ReviseDataWithstyleChange(this);" type="button">완료</button><button onclick="findNamepop(${i});" type="button" class="del-btn">삭제</button></div></div></td></tr>`;
     } else if (searchType.value === "email") {
       const email = arrData[i].email.replace(val,`<span style="color: blue;">${val}</span>`)
-      targetList.innerHTML +=  `<tr><td data-index=${arrData[i].id}>${k}</td><td class="target-name${i}"><span class="view-data">${arrData[i].name}</span><input class="correction-input" id="up-name" type="text" readonly value="${arrData[i].name}"></td><td><span class="view-data">${arrData[i].age}</span><input class="correction-input" id="up-age" type="text" readonly value="${arrData[i].age}"></td><td><span class="view-data">${arrData[i].job}</span><input class="correction-input" id="up-job" type="text" readonly value="${arrData[i].job}"></td><td><div class="button-box"><span><span class="view-data">${email}</span><input class="correction-input" id="up-email" type="text" readonly value="${arrData[i].email}"></span><div><button class="correction-data" onclick="entcrValueWithstyleChange(this);" type="button">수정</button><button class="up-data" onclick="ReviseDataWithstyleChange(this);" type="button">완료</button><button onclick="findNamepop(${i});" type="button" class="del-btn">삭제</button></div></div></td></tr>`;
+      targetList.innerHTML +=  `<tr><td data-index=${arrData[i].id}>${i + 1}</td><td class="target-name${i}"><span class="view-data">${arrData[i].name}</span><input class="correction-input" id="up-name" type="text" readonly value="${arrData[i].name}"></td><td><span class="view-data">${arrData[i].age}</span><input class="correction-input" id="up-age" type="text" readonly value="${arrData[i].age}"></td><td><span class="view-data">${arrData[i].job}</span><input class="correction-input" id="up-job" type="text" readonly value="${arrData[i].job}"></td><td><div class="button-box"><span><span class="view-data">${email}</span><input class="correction-input" id="up-email" type="text" readonly value="${arrData[i].email}"></span><div><button class="correction-data" onclick="entcrValueWithstyleChange(this);" type="button">수정</button><button class="up-data" onclick="ReviseDataWithstyleChange(this);" type="button">완료</button><button onclick="findNamepop(${i});" type="button" class="del-btn">삭제</button></div></div></td></tr>`;
     } else if (searchType.value === "age") {
       const stringVal = val.toString();
       const age = arrData[i].age.toString().replace(stringVal,`<span style="color: blue;">${stringVal}</span>`)
-      targetList.innerHTML += `<tr><td data-index=${arrData[i].id}>${k}</td><td class="target-name${i}"><span class="view-data">${arrData[i].name}</span><input class="correction-input" id="up-name" type="text" readonly value="${arrData[i].name}"></td><td><span class="view-data">${age}</span><input class="correction-input" id="up-age" type="text" readonly value="${arrData[i].age}"></td><td><span class="view-data">${arrData[i].job}</span><input class="correction-input" id="up-job" type="text" readonly value="${arrData[i].job}"></td><td><div class="button-box"><span><span class="view-data">${arrData[i].email}</span><input class="correction-input" id="up-email" type="text" readonly value="${arrData[i].email}"></span><div><button class="correction-data" onclick="entcrValueWithstyleChange(this);" type="button">수정</button><button class="up-data" onclick="ReviseDataWithstyleChange(this);" type="button">완료</button><button onclick="findNamepop(${i});" type="button" class="del-btn">삭제</button></div></div></td></tr>`;
+      targetList.innerHTML += `<tr><td data-index=${arrData[i].id}>${i + 1}</td><td class="target-name${i}"><span class="view-data">${arrData[i].name}</span><input class="correction-input" id="up-name" type="text" readonly value="${arrData[i].name}"></td><td><span class="view-data">${age}</span><input class="correction-input" id="up-age" type="text" readonly value="${arrData[i].age}"></td><td><span class="view-data">${arrData[i].job}</span><input class="correction-input" id="up-job" type="text" readonly value="${arrData[i].job}"></td><td><div class="button-box"><span><span class="view-data">${arrData[i].email}</span><input class="correction-input" id="up-email" type="text" readonly value="${arrData[i].email}"></span><div><button class="correction-data" onclick="entcrValueWithstyleChange(this);" type="button">수정</button><button class="up-data" onclick="ReviseDataWithstyleChange(this);" type="button">완료</button><button onclick="findNamepop(${i});" type="button" class="del-btn">삭제</button></div></div></td></tr>`;
     } else {
       const job = arrData[i].job.replace(val,`<span style="color: blue;">${val}</span>`)
-      targetList.innerHTML += `<tr><td data-index=${arrData[i].id}>${k}</td><td class="target-name${i}"><span class="view-data">${arrData[i].name}</span><input class="correction-input" id="up-name" type="text" readonly value="${arrData[i].name}"></td><td><span class="view-data">${arrData[i].age}</span><input class="correction-input" id="up-age" type="text" readonly value="${arrData[i].age}"></td><td><span class="view-data">${job}</span><input class="correction-input" id="up-job" type="text" readonly value="${arrData[i].job}"></td><td><div class="button-box"><span><span class="view-data">${arrData[i].email}</span><input class="correction-input" id="up-email" type="text" readonly value="${arrData[i].email}"></span><div><button class="correction-data" onclick="entcrValueWithstyleChange(this);" type="button">수정</button><button class="up-data" onclick="ReviseDataWithstyleChange(this);" type="button">완료</button><button onclick="findNamepop(${i});" type="button" class="del-btn">삭제</button></div></div></td></tr>`;
+      targetList.innerHTML += `<tr><td data-index=${arrData[i].id}>${i + 1}</td><td class="target-name${i}"><span class="view-data">${arrData[i].name}</span><input class="correction-input" id="up-name" type="text" readonly value="${arrData[i].name}"></td><td><span class="view-data">${arrData[i].age}</span><input class="correction-input" id="up-age" type="text" readonly value="${arrData[i].age}"></td><td><span class="view-data">${job}</span><input class="correction-input" id="up-job" type="text" readonly value="${arrData[i].job}"></td><td><div class="button-box"><span><span class="view-data">${arrData[i].email}</span><input class="correction-input" id="up-email" type="text" readonly value="${arrData[i].email}"></span><div><button class="correction-data" onclick="entcrValueWithstyleChange(this);" type="button">수정</button><button class="up-data" onclick="ReviseDataWithstyleChange(this);" type="button">완료</button><button onclick="findNamepop(${i});" type="button" class="del-btn">삭제</button></div></div></td></tr>`;
     }
-    k++;
   }
-
   countTable.innerHTML = listCount.rows.length;
 }
 function getEndpoint(endpoint) {
@@ -213,14 +210,12 @@ async function fetchRequest(infoURL, method, body) {
 }
 
 function showUserlistWithCount(arrData) {
-  let j = 1;
   let innerTag = '';
   for (let i = 0; i < arrData.length; i++) {
     if (arrData.length - 1 === i) {
       targetCount.value = Number(arrData[i].id) + 1;
     }
-    innerTag += `<tr><td data-index=${arrData[i].id}>${j}</td><td class="target-name${i}"><span class="view-data">${arrData[i].name}</span><input class="correction-input" id="up-name" type="text" readonly value="${arrData[i].name}"></td><td><span class="view-data">${arrData[i].age}</span><input class="correction-input" id="up-age" type="text" readonly value="${arrData[i].age}"></td><td><span class="view-data">${arrData[i].job}</span><input class="correction-input" id="up-job" type="text" readonly value="${arrData[i].job}"></td><td><div class="button-box"><span><span class="view-data">${arrData[i].email}</span><input class="correction-input" id="up-email" type="text" readonly value="${arrData[i].email}"></span><div><button class="correction-data" onclick="entcrValueWithstyleChange(this);" type="button">수정</button><button class="up-data" onclick="ReviseDataWithstyleChange(this);" type="button">완료</button><button onclick="findNamepop(${i});" type="button" class="del-btn">삭제</button></div></div></td></tr>`;
-    j++;
+    innerTag += `<tr><td data-index=${arrData[i].id}>${i + 1}</td><td class="target-name${i}"><span class="view-data">${arrData[i].name}</span><input class="correction-input" id="up-name" type="text" readonly value="${arrData[i].name}"></td><td><span class="view-data">${arrData[i].age}</span><input class="correction-input" id="up-age" type="text" readonly value="${arrData[i].age}"></td><td><span class="view-data">${arrData[i].job}</span><input class="correction-input" id="up-job" type="text" readonly value="${arrData[i].job}"></td><td><div class="button-box"><span><span class="view-data">${arrData[i].email}</span><input class="correction-input" id="up-email" type="text" readonly value="${arrData[i].email}"></span><div><button class="correction-data" onclick="entcrValueWithstyleChange(this);" type="button">수정</button><button class="up-data" onclick="ReviseDataWithstyleChange(this);" type="button">완료</button><button onclick="findNamepop(${i});" type="button" class="del-btn">삭제</button></div></div></td></tr>`;
   }
   targetList.innerHTML = innerTag;
   countTable.innerHTML = listCount.rows.length;
@@ -235,7 +230,7 @@ function emailCheck(email) {
   return (email !== '' && email !== 'undefined' && regex.test(email));
 }
 
-function clearView() {
+function latestDatashow() {
   targetList.innerHTML = '';
   showGetdata();
 }
