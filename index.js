@@ -1,6 +1,4 @@
 'use strict'
-
-const requestURL = 'http://localhost:3000/accoounts';
 const END_POINT = 'http://localhost'
 const PORT = 3000
 const targetList = document.getElementById('target');
@@ -33,7 +31,7 @@ async function fetchTimeout(resource, options = {}) {
 
 async function checkTime() {
   try {
-    await fetchTimeout(requestURL, {
+    await fetchTimeout(getEndpoint("accoounts"), {
       timeout: 2000
     });
     getTime();
@@ -189,16 +187,16 @@ function showSearchResult(arrData, val) {
     throw new Error('회원이 존재하지 않습니다.');
   }
   for (let i = 0; i < arrData.length; i++) {
+    const common = `
+    <tr>
+      <td data-index=${arrData[i].id}>${i + 1}</td>
+      <td class="target-name${i}"><span class="view-data">${name}</span><input class="correction-input" id="up-name" type="text" readonly value="${arrData[i].name}"></td>
+      <td><span class="view-data">${arrData[i].age}</span><input class="correction-input" id="up-age" type="text" readonly value="${arrData[i].age}"></td>
+      <td><span class="view-data">${arrData[i].job}</span><input class="correction-input" id="up-job" type="text" readonly value="${arrData[i].job}"></td>
+      <td><div class="button-box"><span><span class="view-data">${arrData[i].email}</span><input class="correction-input" id="up-email" type="text" readonly value="${arrData[i].email}"></span><div><button class="correction-data" onclick="entcrValueWithstyleChange(this);" type="button">수정</button><button class="up-data" onclick="ReviseDataWithstyleChange(this);" type="button">완료</button><button onclick="findNamepop(${i});" type="button" class="del-btn">삭제</button></div></div></td>
+    </tr>`;
     if (searchType.value === "name") {
       const name = arrData[i].name.replace(val,`<span style="color: blue;">${val}</span>`)
-      const common = `
-      <tr>
-        <td data-index=${arrData[i].id}>${i + 1}</td>
-        <td class="target-name${i}"><span class="view-data">${name}</span><input class="correction-input" id="up-name" type="text" readonly value="${arrData[i].name}"></td>
-        <td><span class="view-data">${arrData[i].age}</span><input class="correction-input" id="up-age" type="text" readonly value="${arrData[i].age}"></td>
-        <td><span class="view-data">${arrData[i].job}</span><input class="correction-input" id="up-job" type="text" readonly value="${arrData[i].job}"></td>
-        <td><div class="button-box"><span><span class="view-data">${arrData[i].email}</span><input class="correction-input" id="up-email" type="text" readonly value="${arrData[i].email}"></span><div><button class="correction-data" onclick="entcrValueWithstyleChange(this);" type="button">수정</button><button class="up-data" onclick="ReviseDataWithstyleChange(this);" type="button">완료</button><button onclick="findNamepop(${i});" type="button" class="del-btn">삭제</button></div></div></td>
-      </tr>`;
       targetList.innerHTML += `
       <tr>
         <td data-index=${arrData[i].id}>${i + 1}</td>
@@ -250,7 +248,7 @@ async function fetchRequest(infoURL, method, body) {
   return await fetch(getEndpoint(infoURL), {
     method,
     headers: {"Content-Type": "application/json"},
-    body,
+    body
   })
 }
 
