@@ -32,15 +32,15 @@ async function fetchTimeout(resource, options = {}) {
 }
 
 async function checkTime() {
-  try {
     await fetchTimeout(requestURL, {
       timeout: TIME_OUT
     });
     getTime();
-  } catch (err) {
-    alert(err)
-  }
 }
+
+
+
+// requestData(checkTime)
 
 async function getTime() {
   try {
@@ -59,14 +59,21 @@ function viewTime(arrData) {
 }
 
 async function showGetdata() {
-  try {
-    const response = await fetchRequest("accoounts", 'GET');
+    const response = await fetchRequest("accoounts", 'GETs');
     accounts = await response.json()
-    await showUserlistWithCount(accounts)
+    await showUserlistWithCount(accounts);
+}
+
+function requestData(fn){
+  try {
+    fn();
   } catch(err) {
+    console.log(err)
     alert(err)
   }
 }
+
+requestData(showGetdata)
 
 async function addData() {
   const email = tragetEmail.value;
@@ -234,7 +241,7 @@ function latestDatashow() {
   showGetdata();
 }
 
-checkTime();
+// checkTime();
 
 
 
