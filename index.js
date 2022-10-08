@@ -13,6 +13,7 @@ const targetCount = document.getElementById('num');
 const countTable = document.getElementById('count-list');
 const listCount = document.getElementById('table-count');
 const searchType = document.getElementById('search-type');
+const searchInput = document.getElementById('search');
 const findOpen = document.getElementById('open-time');
 const findClose = document.getElementById('close-time');
 const TIME_OUT = 5000;
@@ -32,24 +33,20 @@ async function fetchTimeout(resource, options = {}) {
 }
 
 async function checkTime() {
+  try {
     await fetchTimeout(requestURL, {
       timeout: TIME_OUT
     });
     getTime();
-}
-
-
-
-// requestData(checkTime)
-
-async function getTime() {
-  try {
-    const response = await fetchRequest("businessHours", 'GET');
-    accounts = await response.json()
-    await viewTime(accounts);
   } catch(err) {
     alert(err)
   }
+}
+
+async function getTime() {
+    const response = await requestData("businessHours", 'GET');
+    accounts = await response.json()
+    await viewTime(accounts);
 }
 
 function viewTime(arrData) {
@@ -59,21 +56,22 @@ function viewTime(arrData) {
 }
 
 async function showGetdata() {
-    const response = await fetchRequest("accoounts", 'GETs');
+    const response = await requestData("accoounts", 'GET');
     accounts = await response.json()
     await showUserlistWithCount(accounts);
 }
 
-function requestData(fn){
+async function requestData(infoURL, method, body){
   try {
-    fn();
-  } catch(err) {
-    console.log(err)
-    alert(err)
+      return await fetch(getEndpoint(infoURL), {
+      method,
+      headers: {"Content-Type": "application/json"},
+      body
+    })
+  } catch {
+    alert("API 요청에 실패했습니다.")
   }
 }
-
-requestData(showGetdata)
 
 async function addData() {
   const email = tragetEmail.value;
@@ -81,8 +79,7 @@ async function addData() {
     alert('email을 형식에 맞게 입력하세요.');
   } else {
     if (listCount.rows.length < PAGE_COUNT){
-      try {
-        await fetchRequest(
+        await requestData(
           "accoounts",
           'POST',
           JSON.stringify({
@@ -94,9 +91,6 @@ async function addData() {
           }),
         );
         latestDatashow();
-      } catch(err) {
-        alert(err)
-      }
     } else {
       alert(`회원이 ${PAGE_COUNT}명 이상입니다.`);
     }
@@ -125,8 +119,7 @@ async function ReviseDataWithstyleChange(evt){
     const upemail = updateTr.querySelector('#up-email');
     evt.style.display = "none";
     evt.previousSibling.style.display = "block";
-    try {
-      await fetchRequest(
+      await requestData(
         `${"accoounts"}/${Number(patchNum)}`, "PUT",
         JSON.stringify({
           id: Number(targetCount.value),
@@ -138,19 +131,12 @@ async function ReviseDataWithstyleChange(evt){
       )
       latestDatashow();
       alert("수정이 완료되었습니다.");
-    } catch(err) {
-      alert(err)
-    }
   }
 
 async function deleteData(num) {
-  delList.style.display = 'none';
-  try {
-    await fetchRequest(`${"accoounts"}/${num}`, "DELETE")
+    delList.style.display = 'none';
+    await requestData(`${"accoounts"}/${num}`, "DELETE")
     latestDatashow();
-  } catch(err) {
-    alert(err)
-  }
 }
 
 function findNamepop(targetNum) {
@@ -170,15 +156,11 @@ async function importingDC(val) {
     alert("분류를 선택하세요"); 
   } else {
     targetList.innerHTML = '';
-    try {
-      const response = (searchType.value === 'age' || searchType.value === 'job') ? await fetchRequest(`accoounts/?${searchType.value}=${val}`, 'GET') : await fetchRequest(`accoounts/?${searchType.value}_like=${val}`, 'GET')
-      accounts = await response.json()
-      showSearchResult(accounts, val);
-    } catch(err) {
-      alert(err);
-      countTable.innerHTML = listCount.rows.length;
-    }
+    const response = (searchType.value === 'age' || searchType.value === 'job') ? await requestData(`accoounts/?${searchType.value}=${val}`, 'GET') : await requestData(`accoounts/?${searchType.value}_like=${val}`, 'GET')
+    accounts = await response.json()
+    showSearchResult(accounts, val);
   }
+  countTable.innerHTML = listCount.rows.length;
 }
 
 function showSearchResult(arrData, val) {
@@ -207,14 +189,6 @@ function getEndpoint(endpoint) {
   return `${END_POINT}:${PORT}/${endpoint}`
 }
 
-async function fetchRequest(infoURL, method, body) {
-  return await fetch(getEndpoint(infoURL), {
-    method,
-    headers: {"Content-Type": "application/json"},
-    body,
-  })
-}
-
 function showUserlistWithCount(arrData) {
   let innerTag = '';
   for (let i = 0; i < arrData.length; i++) {
@@ -241,7 +215,7 @@ function latestDatashow() {
   showGetdata();
 }
 
-// checkTime();
+checkTime();
 
 
 
