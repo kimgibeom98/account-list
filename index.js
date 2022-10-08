@@ -60,19 +60,23 @@ function viewTime(arrData) {
 }
 
 async function showGetdata() {
+  try{
     const response = await fetchRequest("accoounts", 'GET');
     accounts = await response.json()
     await showUserlistWithCount(accounts);
-}
-
-function requestData(fn){
-  try {
-    fn();
-  } catch(err) {
-    console.log(err)
+  } catch (err) {
     alert(err)
   }
 }
+
+// function requestData(fn){
+//   try {
+//     fn();
+//   } catch(err) {
+//     console.log(err)
+//     alert(err)
+//   }
+// }
 
 async function addData() {
   const email = tragetEmail.value;
@@ -187,6 +191,14 @@ function showSearchResult(arrData, val) {
   for (let i = 0; i < arrData.length; i++) {
     if (searchType.value === "name") {
       const name = arrData[i].name.replace(val,`<span style="color: blue;">${val}</span>`)
+      const common = `
+      <tr>
+        <td data-index=${arrData[i].id}>${i + 1}</td>
+        <td class="target-name${i}"><span class="view-data">${name}</span><input class="correction-input" id="up-name" type="text" readonly value="${arrData[i].name}"></td>
+        <td><span class="view-data">${arrData[i].age}</span><input class="correction-input" id="up-age" type="text" readonly value="${arrData[i].age}"></td>
+        <td><span class="view-data">${arrData[i].job}</span><input class="correction-input" id="up-job" type="text" readonly value="${arrData[i].job}"></td>
+        <td><div class="button-box"><span><span class="view-data">${arrData[i].email}</span><input class="correction-input" id="up-email" type="text" readonly value="${arrData[i].email}"></span><div><button class="correction-data" onclick="entcrValueWithstyleChange(this);" type="button">수정</button><button class="up-data" onclick="ReviseDataWithstyleChange(this);" type="button">완료</button><button onclick="findNamepop(${i});" type="button" class="del-btn">삭제</button></div></div></td>
+      </tr>`;
       targetList.innerHTML += `
       <tr>
         <td data-index=${arrData[i].id}>${i + 1}</td>
