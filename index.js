@@ -136,7 +136,7 @@ async function reviseDataWithstyleChange(targetId){
     const upJob = updateTr.querySelector('#up-job');
     const upemail = updateTr.querySelector('#up-email');
     noneUpdatebtn.style.display = "none";
-    noneUpdatebtn.previousSibling.style.display = "block";
+    noneUpdatebtn.previousElementSibling.style.display = "block";
     try {
       await fetchRequest(
         `${"accoounts"}/${Number(targetId)}`, "PUT",
@@ -191,8 +191,8 @@ async function importingDC(val) {
       const response = (searchType.value === 'age' || searchType.value === 'job') ? await fetchRequest(`accoounts/?${searchType.value}=${val}`, 'GET') : await fetchRequest(`accoounts/?${searchType.value}_like=${val}`, 'GET')
       const accounts = await response.json()
       showSearchResult(accounts, val);
-    } catch {
-      alert('API 요청에 실패했습니다.');
+    } catch(err) {
+      alert(err);
       countTable.innerHTML = listCount.rows.length;
     }
   }
