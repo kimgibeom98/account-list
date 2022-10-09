@@ -112,20 +112,22 @@ async function addData() {
   }
 }
 
-async function getentcrValueWithstyleChange(evt){
+async function getentcrValueData(evt){
   try {
     const response = await fetchRequest(`accoounts/${evt}`, 'GET');
     const accounts = await response.json()
     entcrValueWithstyleChange(accounts)
-  } catch {
-    alert('API 요청에 실패했습니다.')
+  } catch (err){
+    alert(err)
   }
 }
 
-function entcrValueWithstyleChange(){
-  evt.style.display = "none"
-  evt.nextSibling.style.display = "block";
-  const updateTr = evt.parentNode.parentNode.parentNode.parentNode; 
+function entcrValueWithstyleChange(arrData){
+  const findTargetid = document.querySelector(`#data-value${arrData.id}`);
+  const updateTr = findTargetid.parentNode;
+  const noneCorrectionbtn = updateTr.querySelector('.correction-data'); 
+  noneCorrectionbtn.style.display = "none"
+  noneCorrectionbtn.nextSibling.style.display = "block"; 
   const updateInput = updateTr.querySelectorAll('.correction-input');
   const noneSpan = updateTr.querySelectorAll('.view-data');
   for (let i = 0; i < updateInput.length; i++) {
@@ -167,8 +169,8 @@ async function deleteData(num) {
   try {
     await fetchRequest(`${"accoounts"}/${num}`, "DELETE")
     latestDatashow();
-  } catch(err) {
-    alert(err)
+  } catch {
+    alert("API 요청에 실패했습니다.")
   }
 }
 
@@ -261,7 +263,7 @@ function showUserlistWithCount(arrData) {
     if (arrData.length - 1 === i) {
       targetCount.value = Number(arrData[i].id) + 1;
     }
-    innerTag += `<tr><td data-index=${arrData[i].id}>${i + 1}</td><td class="target-name${i}"><span class="view-data">${arrData[i].name}</span><input class="correction-input" id="up-name" type="text" readonly value="${arrData[i].name}"></td><td><span class="view-data">${arrData[i].age}</span><input class="correction-input" id="up-age" type="text" readonly value="${arrData[i].age}"></td><td><span class="view-data">${arrData[i].job}</span><input class="correction-input" id="up-job" type="text" readonly value="${arrData[i].job}"></td><td><div class="button-box"><span><span class="view-data">${arrData[i].email}</span><input class="correction-input" id="up-email" type="text" readonly value="${arrData[i].email}"></span><div><button class="correction-data" onclick="entcrValueWithstyleChange(${arrData[i].id});" type="button">수정</button><button class="up-data" onclick="ReviseDataWithstyleChange(this);" type="button">완료</button><button onclick="findNamepop(${i});" type="button" class="del-btn">삭제</button></div></div></td></tr>`;
+    innerTag += `<tr><td id="data-value${arrData[i].id}" data-index=${arrData[i].id}>${i + 1}</td><td class="target-name${i}"><span class="view-data">${arrData[i].name}</span><input class="correction-input" id="up-name" type="text" readonly value="${arrData[i].name}"></td><td><span class="view-data">${arrData[i].age}</span><input class="correction-input" id="up-age" type="text" readonly value="${arrData[i].age}"></td><td><span class="view-data">${arrData[i].job}</span><input class="correction-input" id="up-job" type="text" readonly value="${arrData[i].job}"></td><td><div class="button-box"><span><span class="view-data">${arrData[i].email}</span><input class="correction-input" id="up-email" type="text" readonly value="${arrData[i].email}"></span><div><button class="correction-data" onclick="getentcrValueData(${arrData[i].id});" type="button">수정</button><button class="up-data" onclick="ReviseDataWithstyleChange(this);" type="button">완료</button><button onclick="findNamepop(${i});" type="button" class="del-btn">삭제</button></div></div></td></tr>`;
   }
   targetList.innerHTML = innerTag;
   countTable.innerHTML = listCount.rows.length;
