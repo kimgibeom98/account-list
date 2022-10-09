@@ -46,7 +46,7 @@ async function getTime() {
   try {
     const response = await fetchRequest("businessHours", 'GET');
     const accounts = await response.json()
-    await viewTime(accounts);
+    viewTime(accounts);
   } catch {
     alert('API 요청에 실패했습니다.')
   }
@@ -59,16 +59,16 @@ function viewTime(arrData) {
 }
 
 async function showGetdata() {
-  // try{
+  try{
     const response = await fetchRequest("accoounts", 'GET');
     const accounts = await response.json()
-    await showUserlistWithCount(accounts);
-  // } catch {
-  //   alert('API 요청에 실패했습니다.')
-  // }
+    showUserlistWithCount(accounts);
+  } catch {
+    alert('API 요청에 실패했습니다.')
+  }
 }
 
-async function requestData(fn, infoURL, method, body){
+async function requestData(fn){
   try {
     fn();
     // async function fetchRequest(infoURL, method, body) {
@@ -78,11 +78,11 @@ async function requestData(fn, infoURL, method, body){
         body
       })
     // }
-  } catch {
-    alert('API 요청에 실패했습니다.')
+  } catch(err) {
+    alert(err)
   }
 }
-requestData(showGetdata)
+// requestData(showGetdata)
 
 async function addData() {
   const email = tragetEmail.value;
@@ -112,7 +112,17 @@ async function addData() {
   }
 }
 
-function entcrValueWithstyleChange(evt){
+async function getentcrValueWithstyleChange(evt){
+  try {
+    const response = await fetchRequest(`accoounts/${evt}`, 'GET');
+    const accounts = await response.json()
+    entcrValueWithstyleChange(accounts)
+  } catch {
+    alert('API 요청에 실패했습니다.')
+  }
+}
+
+function entcrValueWithstyleChange(){
   evt.style.display = "none"
   evt.nextSibling.style.display = "block";
   const updateTr = evt.parentNode.parentNode.parentNode.parentNode; 
@@ -251,7 +261,7 @@ function showUserlistWithCount(arrData) {
     if (arrData.length - 1 === i) {
       targetCount.value = Number(arrData[i].id) + 1;
     }
-    innerTag += `<tr><td data-index=${arrData[i].id}>${i + 1}</td><td class="target-name${i}"><span class="view-data">${arrData[i].name}</span><input class="correction-input" id="up-name" type="text" readonly value="${arrData[i].name}"></td><td><span class="view-data">${arrData[i].age}</span><input class="correction-input" id="up-age" type="text" readonly value="${arrData[i].age}"></td><td><span class="view-data">${arrData[i].job}</span><input class="correction-input" id="up-job" type="text" readonly value="${arrData[i].job}"></td><td><div class="button-box"><span><span class="view-data">${arrData[i].email}</span><input class="correction-input" id="up-email" type="text" readonly value="${arrData[i].email}"></span><div><button class="correction-data" onclick="entcrValueWithstyleChange(this);" type="button">수정</button><button class="up-data" onclick="ReviseDataWithstyleChange(this);" type="button">완료</button><button onclick="findNamepop(${i});" type="button" class="del-btn">삭제</button></div></div></td></tr>`;
+    innerTag += `<tr><td data-index=${arrData[i].id}>${i + 1}</td><td class="target-name${i}"><span class="view-data">${arrData[i].name}</span><input class="correction-input" id="up-name" type="text" readonly value="${arrData[i].name}"></td><td><span class="view-data">${arrData[i].age}</span><input class="correction-input" id="up-age" type="text" readonly value="${arrData[i].age}"></td><td><span class="view-data">${arrData[i].job}</span><input class="correction-input" id="up-job" type="text" readonly value="${arrData[i].job}"></td><td><div class="button-box"><span><span class="view-data">${arrData[i].email}</span><input class="correction-input" id="up-email" type="text" readonly value="${arrData[i].email}"></span><div><button class="correction-data" onclick="entcrValueWithstyleChange(${arrData[i].id});" type="button">수정</button><button class="up-data" onclick="ReviseDataWithstyleChange(this);" type="button">완료</button><button onclick="findNamepop(${i});" type="button" class="del-btn">삭제</button></div></div></td></tr>`;
   }
   targetList.innerHTML = innerTag;
   countTable.innerHTML = listCount.rows.length;
