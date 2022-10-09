@@ -50,7 +50,7 @@ h1{font-size: 35px; margin-bottom: 5px;}
 .list-table > thead tr th:nth-of-type(4){width: 160px;}
 .list-table > thead tr th:nth-of-type(5){width: 251.36px;}
 .button-box{display: flex; justify-content: space-between;}
-.button-box > span{width: 63%; max-width: 164px;}
+.button-box > span{width: 63%; max-width: 157px;}
 .button-box > div{display: flex;}
 .button-box > div button{border: 1px solid #e3e3e3; background-color: white; cursor: pointer; color: #333333;}
 .del-btn{margin-left: 5px;}
@@ -68,9 +68,9 @@ h1{font-size: 35px; margin-bottom: 5px;}
 #del-pop > div > button{border: 1px solid #e3e3e3; height: 25px; background-color: white; color: #333333; font-weight: 500; cursor: pointer; width: 54px;}
 #del-pop > div > button:last-of-type{margin-left: 5px;}
 .up-date{display: none;}
-.view-data{border: 1px solid #fff; display: inline-block;}
+.view-data{border: 1px solid #fff; display: inline-block; width: 100%; box-sizing: border-box;}
 .correction-data{display: block;}
-.correction-input{display: none; width: 170px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; height: 19px; box-sizing: border-box; padding: 0;}
+.correction-input{display: none; width: 100%; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; height: 19px; box-sizing: border-box; padding: 0;}
 #reset-btn{margin-left: 5px;}
 .time-box{position: fixed; right: 22%; top: 73px; border: 1px solid #ddd; padding: 15px;}
 .time-box > ul{padding: 0; margin: 0;}

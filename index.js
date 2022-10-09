@@ -117,7 +117,7 @@ function entcrValueWithstyleChange(targetId){
   const updateTr = findTargetid.parentNode;
   const noneCorrectionbtn = updateTr.querySelector('.correction-data'); 
   noneCorrectionbtn.style.display = "none"
-  noneCorrectionbtn.nextSibling.style.display = "block"; 
+  noneCorrectionbtn.nextElementSibling.style.display = "block"; 
   const updateInput = updateTr.querySelectorAll('.correction-input');
   const noneSpan = updateTr.querySelectorAll('.view-data');
   for (let i = 0; i < updateInput.length; i++) {
@@ -167,9 +167,15 @@ async function deleteData(num) {
 
 function findNamepop(targetId) {
   const delName = document.querySelector(`#data-value${targetId}`);
-  const findDelname = delName.nextSibling.querySelector('.view-data')
+  const findDelname = delName.nextElementSibling.querySelector('.view-data')
+  console.log(findDelname)
   delList.style.display = 'block';
-  delList.innerHTML = `<p>${findDelname.innerText} 님을 삭제하시겠습니까?</p><div><button type="button" onclick="deleteData(${targetId})" class="y-btn">예</button><button type="button" class="n-btn">아니요</button></div>`
+  delList.innerHTML = `
+  <p>${findDelname.innerText} 님을 삭제하시겠습니까?</p>
+  <div>
+    <button type="button" onclick="deleteData(${targetId})" class="y-btn">예</button>
+    <button type="button" class="n-btn">아니요</button>
+  </div>`
   const delPop = document.querySelector('.n-btn');
   delPop.onclick = function () {
     delList.style.display = 'none';
@@ -212,7 +218,7 @@ function showSearchResult(arrData, val) {
           <div>
             <button class="correction-data" onclick="entcrValueWithstyleChange(${arrData[i].id});" type="button">수정</button>
             <button class="up-date" onclick="reviseDataWithstyleChange(${arrData[i].id});" type="button">완료</button>
-            <button onclick="findNamepop(${i});" type="button" class="del-btn">삭제</button>
+            <button onclick="findNamepop(${arrData[i].id});" type="button" class="del-btn">삭제</button>
           </div>
         </div>
       </td>
@@ -253,7 +259,26 @@ function showUserlistWithCount(arrData) {
     if (arrData.length - 1 === i) {
       targetCount.value = Number(arrData[i].id) + 1;
     }
-    innerTag += `<tr><td id="data-value${arrData[i].id}">${i + 1}</td><td class="target-name${i}"><span class="view-data">${arrData[i].name}</span><input class="correction-input" id="up-name" type="text" readonly value="${arrData[i].name}"></td><td><span class="view-data">${arrData[i].age}</span><input class="correction-input" id="up-age" type="text" readonly value="${arrData[i].age}"></td><td><span class="view-data">${arrData[i].job}</span><input class="correction-input" id="up-job" type="text" readonly value="${arrData[i].job}"></td><td><div class="button-box"><span><span class="view-data">${arrData[i].email}</span><input class="correction-input" id="up-email" type="text" readonly value="${arrData[i].email}"></span><div><button class="correction-data" onclick="entcrValueWithstyleChange(${arrData[i].id});" type="button">수정</button><button class="up-date" onclick="reviseDataWithstyleChange(${arrData[i].id});" type="button">완료</button><button onclick="findNamepop(${arrData[i].id});" type="button" class="del-btn">삭제</button></div></div></td></tr>`;
+    innerTag += `
+    <tr>
+      <td id="data-value${arrData[i].id}">${i + 1}</td>
+      <td class="target-name${i}"><span class="view-data">${arrData[i].name}</span><input class="correction-input" id="up-name" type="text" readonly value="${arrData[i].name}"></td>
+      <td><span class="view-data">${arrData[i].age}</span><input class="correction-input" id="up-age" type="text" readonly value="${arrData[i].age}"></td>
+      <td><span class="view-data">${arrData[i].job}</span><input class="correction-input" id="up-job" type="text" readonly value="${arrData[i].job}"></td>
+      <td>
+        <div class="button-box">
+          <span>
+            <span class="view-data">${arrData[i].email}</span>
+            <input class="correction-input" id="up-email" type="text" readonly value="${arrData[i].email}">
+          </span>
+          <div>
+            <button class="correction-data" onclick="entcrValueWithstyleChange(${arrData[i].id});" type="button">수정</button>
+            <button class="up-date" onclick="reviseDataWithstyleChange(${arrData[i].id});" type="button">완료</button>
+            <button onclick="findNamepop(${arrData[i].id});" type="button" class="del-btn">삭제</button>
+          </div>
+        </div>
+      </td>
+    </tr>`;
   }
   targetList.innerHTML = innerTag;
   countTable.innerHTML = listCount.rows.length;
