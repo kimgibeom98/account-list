@@ -59,16 +59,16 @@ function viewTime(arrData) {
 }
 
 async function showGetdata() {
-  try{
+  // try{
     const response = await fetchRequest("accoounts", 'GET');
     const accounts = await response.json()
     await showUserlistWithCount(accounts);
-  } catch {
-    alert('API 요청에 실패했습니다.')
-  }
+  // } catch {
+  //   alert('API 요청에 실패했습니다.')
+  // }
 }
 
-async function requestData(fn){
+async function requestData(fn, infoURL, method, body){
   try {
     fn();
     // async function fetchRequest(infoURL, method, body) {
@@ -78,11 +78,11 @@ async function requestData(fn){
         body
       })
     // }
-  } catch(err) {
-    alert(err)
+  } catch {
+    alert('API 요청에 실패했습니다.')
   }
 }
-// requestData(showGetdata)
+requestData(showGetdata)
 
 async function addData() {
   const email = tragetEmail.value;
