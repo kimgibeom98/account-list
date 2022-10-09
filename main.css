@@ -67,7 +67,7 @@ h1{font-size: 35px; margin-bottom: 5px;}
 #del-pop > div{display: flex; justify-content: center;}
 #del-pop > div > button{border: 1px solid #e3e3e3; height: 25px; background-color: white; color: #333333; font-weight: 500; cursor: pointer; width: 54px;}
 #del-pop > div > button:last-of-type{margin-left: 5px;}
-.up-data{display: none;}
+.up-date{display: none;}
 .view-data{border: 1px solid #fff; display: inline-block;}
 .correction-data{display: block;}
 .correction-input{display: none; width: 170px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; height: 19px; box-sizing: border-box; padding: 0;}

@@ -112,18 +112,8 @@ async function addData() {
   }
 }
 
-async function getentcrValueData(evt){
-  try {
-    const response = await fetchRequest(`accoounts/${evt}`, 'GET');
-    const accounts = await response.json()
-    entcrValueWithstyleChange(accounts)
-  } catch (err){
-    alert(err)
-  }
-}
-
-function entcrValueWithstyleChange(arrData){
-  const findTargetid = document.querySelector(`#data-value${arrData.id}`);
+function entcrValueWithstyleChange(targetId){
+  const findTargetid = document.querySelector(`#data-value${targetId}`);
   const updateTr = findTargetid.parentNode;
   const noneCorrectionbtn = updateTr.querySelector('.correction-data'); 
   noneCorrectionbtn.style.display = "none"
@@ -137,18 +127,19 @@ function entcrValueWithstyleChange(arrData){
   }
 }
 
-async function ReviseDataWithstyleChange(evt){
-    const updateTr = evt.parentNode.parentNode.parentNode.parentNode;
-    const patchNum = updateTr.firstChild.dataset.index;
+async function reviseDataWithstyleChange(targetId){
+    const findTargetid = document.querySelector(`#data-value${targetId}`);
+    const updateTr = findTargetid.parentNode;
+    const noneUpdatebtn = updateTr.querySelector('.up-date');
     const upName = updateTr.querySelector('#up-name');
     const upAge = updateTr.querySelector('#up-age');
     const upJob = updateTr.querySelector('#up-job');
     const upemail = updateTr.querySelector('#up-email');
-    evt.style.display = "none";
-    evt.previousSibling.style.display = "block";
+    noneUpdatebtn.style.display = "none";
+    noneUpdatebtn.previousSibling.style.display = "block";
     try {
       await fetchRequest(
-        `${"accoounts"}/${Number(patchNum)}`, "PUT",
+        `${"accoounts"}/${Number(targetId)}`, "PUT",
         JSON.stringify({
           id: Number(targetCount.value),
           name : upName.value,
@@ -176,7 +167,9 @@ async function deleteData(num) {
 
 function findNamepop(targetNum) {
   const delName = document.querySelector(`.target-name${targetNum}`);
+  console.log(delName.previousSibling)
   const delId = delName.previousSibling.dataset.index
+  console.log(delId)
   const delNameval = document.querySelector(`.target-name${targetNum} > input`);
   delList.style.display = 'block';
   delList.innerHTML = `<p>${delNameval.value} 님을 삭제하시겠습니까?</p><div><button type="button" onclick="deleteData(${delId})" class="y-btn">예</button><button type="button" class="n-btn">아니요</button></div>`
@@ -209,7 +202,7 @@ function showSearchResult(arrData, val) {
   for (let i = 0; i < arrData.length; i++) {
     const commonTag = function(hghiName, hghiAge, hghiJob, hghiEmail) {return ` 
     <tr>
-      <td data-index=${arrData[i].id}>${i + 1}</td>
+      <td id="data-value${arrData[i].id}" data-index=${arrData[i].id}>${i + 1}</td>
       <td class="target-name${i}"><span class="view-data">${hghiName}</span><input class="correction-input" id="up-name" type="text" readonly value="${arrData[i].name}"></td>
       <td><span class="view-data">${hghiAge}</span><input class="correction-input" id="up-age" type="text" readonly value="${arrData[i].age}"></td>
       <td><span class="view-data">${hghiJob}</span><input class="correction-input" id="up-job" type="text" readonly value="${arrData[i].job}"></td>
@@ -220,8 +213,8 @@ function showSearchResult(arrData, val) {
             <input class="correction-input" id="up-email" type="text" readonly value="${arrData[i].email}">
           </span>
           <div>
-            <button class="correction-data" onclick="entcrValueWithstyleChange(this);" type="button">수정</button>
-            <button class="up-data" onclick="ReviseDataWithstyleChange(this);" type="button">완료</button>
+            <button class="correction-data" onclick="entcrValueWithstyleChange(${arrData[i].id});" type="button">수정</button>
+            <button class="up-date" onclick="reviseDataWithstyleChange(${arrData[i].id});" type="button">완료</button>
             <button onclick="findNamepop(${i});" type="button" class="del-btn">삭제</button>
           </div>
         </div>
@@ -263,7 +256,7 @@ function showUserlistWithCount(arrData) {
     if (arrData.length - 1 === i) {
       targetCount.value = Number(arrData[i].id) + 1;
     }
-    innerTag += `<tr><td id="data-value${arrData[i].id}" data-index=${arrData[i].id}>${i + 1}</td><td class="target-name${i}"><span class="view-data">${arrData[i].name}</span><input class="correction-input" id="up-name" type="text" readonly value="${arrData[i].name}"></td><td><span class="view-data">${arrData[i].age}</span><input class="correction-input" id="up-age" type="text" readonly value="${arrData[i].age}"></td><td><span class="view-data">${arrData[i].job}</span><input class="correction-input" id="up-job" type="text" readonly value="${arrData[i].job}"></td><td><div class="button-box"><span><span class="view-data">${arrData[i].email}</span><input class="correction-input" id="up-email" type="text" readonly value="${arrData[i].email}"></span><div><button class="correction-data" onclick="getentcrValueData(${arrData[i].id});" type="button">수정</button><button class="up-data" onclick="ReviseDataWithstyleChange(this);" type="button">완료</button><button onclick="findNamepop(${i});" type="button" class="del-btn">삭제</button></div></div></td></tr>`;
+    innerTag += `<tr><td id="data-value${arrData[i].id}" data-index=${arrData[i].id}>${i + 1}</td><td class="target-name${i}"><span class="view-data">${arrData[i].name}</span><input class="correction-input" id="up-name" type="text" readonly value="${arrData[i].name}"></td><td><span class="view-data">${arrData[i].age}</span><input class="correction-input" id="up-age" type="text" readonly value="${arrData[i].age}"></td><td><span class="view-data">${arrData[i].job}</span><input class="correction-input" id="up-job" type="text" readonly value="${arrData[i].job}"></td><td><div class="button-box"><span><span class="view-data">${arrData[i].email}</span><input class="correction-input" id="up-email" type="text" readonly value="${arrData[i].email}"></span><div><button class="correction-data" onclick="entcrValueWithstyleChange(${arrData[i].id});" type="button">수정</button><button class="up-date" onclick="reviseDataWithstyleChange(${arrData[i].id});" type="button">완료</button><button onclick="findNamepop(${i});" type="button" class="del-btn">삭제</button></div></div></td></tr>`;
   }
   targetList.innerHTML = innerTag;
   countTable.innerHTML = listCount.rows.length;
