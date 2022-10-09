@@ -114,7 +114,7 @@ async function addData() {
 
 function entcrValueWithstyleChange(targetId){
   const findTargetid = document.querySelector(`#data-value${targetId}`);
-  const updateTr = findTargetid.parentNode;
+  const updateTr = findTargetid.parentElement;
   const noneCorrectionbtn = updateTr.querySelector('.correction-data'); 
   noneCorrectionbtn.style.display = "none"
   noneCorrectionbtn.nextElementSibling.style.display = "block"; 
@@ -129,7 +129,7 @@ function entcrValueWithstyleChange(targetId){
 
 async function reviseDataWithstyleChange(targetId){
     const findTargetid = document.querySelector(`#data-value${targetId}`);
-    const updateTr = findTargetid.parentNode;
+    const updateTr = findTargetid.parentElement;
     const noneUpdatebtn = updateTr.querySelector('.up-date');
     const upName = updateTr.querySelector('#up-name');
     const upAge = updateTr.querySelector('#up-age');
@@ -175,7 +175,7 @@ function findNamepop(targetId) {
   <div>
     <button type="button" onclick="deleteData(${targetId})" class="y-btn">예</button>
     <button type="button" class="n-btn">아니요</button>
-  </div>`
+  </div>`;
   const delPop = document.querySelector('.n-btn');
   delPop.onclick = function () {
     delList.style.display = 'none';

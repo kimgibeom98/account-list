@@ -25,22 +25,24 @@ h1{font-size: 35px; margin-bottom: 5px;}
 #target{max-height: 323px; overflow-y: auto; display: block;}
 
 #target > tr:nth-of-type(odd) td{background-color: #f9f9f9;}
-#target > tr > td{ vertical-align: middle; font-size: 13px; color: #333333; height: 30px; box-sizing: border-box; padding-left: 10px; text-align: left;}
+#target > tr > td{ display: inline-block; vertical-align: middle; font-size: 13px; color: #333333; height: 30px; box-sizing: border-box; padding-left: 10px; text-align: left;}
+#target > tr > td{display: flex; align-items: center;}
 #target > tr > td > span,
 #target > tr > td > input{ font-size: 13px; box-sizing: border-box;}
+#target > tr:nth-of-type(odd) td span{border-color: #f9f9f9 !important;}
 #target > tr > td:first-of-type > span,
 #target > tr > td:first-of-type > input{width: 123.34px;}
-#target > tr > td:first-of-type{width: 118px;}
+#target > tr > td:first-of-type{width: 57.69px;}
 #target > tr > td:nth-of-type(2) > span,
 #target > tr > td:nth-of-type(2) > input{width: 87px;}
-#target > tr > td:nth-of-type(2){width: 175px;}
+#target > tr > td:nth-of-type(2){width: 124px;}
 #target > tr > td:nth-of-type(3) > span,
 #target > tr > td:nth-of-type(3) > input{width: 129.91px;}
-#target > tr > td:nth-of-type(3){width: 115px;}
+#target > tr > td:nth-of-type(3){width: 149px;}
 #target > tr > td:nth-of-type(4) > span,
 #target > tr > td:nth-of-type(4) > input{width: 113.98px;}
-#target > tr > td:nth-of-type(4){width: 280.36px;}
-#target > tr > td:nth-of-type(5){width: 358px;}
+#target > tr > td:nth-of-type(4){width: 183px;}
+#target > tr > td:nth-of-type(5){width: 286px;}
 #target > tr > td input{border: 1px solid #fff;}
 #target > tr > td input:focus{outline: none;}
 #target > tr:nth-of-type(odd) td input{border: 1px solid #f9f9f9; background-color: #f9f9f9;}
@@ -49,8 +51,8 @@ h1{font-size: 35px; margin-bottom: 5px;}
 .list-table > thead tr th:nth-of-type(3){width: 131px;}
 .list-table > thead tr th:nth-of-type(4){width: 160px;}
 .list-table > thead tr th:nth-of-type(5){width: 251.36px;}
-.button-box{display: flex; justify-content: space-between;}
-.button-box > span{width: 63%; max-width: 157px;}
+.button-box{display: flex; justify-content: space-between; align-items: center; width: 100%;}
+.button-box > span{max-width: 157px;}
 .button-box > div{display: flex;}
 .button-box > div button{border: 1px solid #e3e3e3; background-color: white; cursor: pointer; color: #333333;}
 .del-btn{margin-left: 5px;}
@@ -61,7 +63,7 @@ h1{font-size: 35px; margin-bottom: 5px;}
 .search-box > input{border: 1px solid #e3e3e3; margin-right: 5px;}
 .search-box > button{border: 1px solid #e3e3e3;cursor: pointer; color: #333333; background-color: white;}
 .body-tablebox > table{width: 100%; table-layout: fixed; box-sizing: border-box;}
-.body-tablebox > table tbody tr{width: 100%;}
+.body-tablebox > table tbody tr{display: flex; width: 100%; align-items: center;}
 #del-pop{width: 300px; height: 150px; display: none; background-color: white; position: absolute; top: 45%; left: calc(50% - 150px); box-shadow: 0 0px 7px rgb(0 0 0 / 30%);}
 #del-pop > p{display: block; font-size: 16px; font-weight: 700; text-align: center; margin: 45px 0 20px 0;}
 #del-pop > div{display: flex; justify-content: center;}
