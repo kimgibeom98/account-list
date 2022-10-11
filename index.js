@@ -2,6 +2,9 @@
 
 const END_POINT = 'http://localhost'
 const PORT = 3000
+const TIME_OUT = 5000;
+const PAGE_COUNT = 15;
+
 const targetList = document.getElementById('target');
 const tragetName = document.getElementById('name');
 const targetJob = document.getElementById('job');
@@ -15,39 +18,38 @@ const searchType = document.getElementById('search-type');
 const searchInput = document.getElementById('search');
 const findOpen = document.getElementById('open-time');
 const findClose = document.getElementById('close-time');
-const TIME_OUT = 5000;
-const PAGE_COUNT = 15;
+
 
 async function fetchTimeout(resource, options = {}) {
-  const { timeout = TIME_OUT } = options;  
+  const { timeout = TIME_OUT } = options;
   const controller = new AbortController();
   const id = setTimeout(() => controller.abort(), timeout);
   const response = await fetch(resource, {
     ...options,
-    signal: controller.signal  
+    signal: controller.signal
   });
   clearTimeout(id);
   return response;
 }
 
 async function checkTime() {
-    await fetchTimeout(getEndpoint("/accoounts"), {
-      timeout: 2000
-    });
-    getTime();
+  await fetchTimeout(getEndpoint("/accoounts"), {
+    timeout: 2000
+  });
+  getTime();
 }
 
 async function showGetdata() {
-    const response = await fetchRequest("/accoounts", 'GET');
-    const accounts = await response.json()
-    showUserlistWithCount(accounts);
+  const response = await fetchRequest("/accoounts", 'GET');
+  const accounts = await response.json()
+  showUserlistWithCount(accounts);
 }
 
 
 async function getTime() {
-    const response = await fetchRequest("/businessHours", 'GET');
-    const accounts = await response.json()
-    showAPITime(accounts)  
+  const response = await fetchRequest("/businessHours", 'GET');
+  const accounts = await response.json()
+  showAPITime(accounts)
 }
 
 function showAPITime(arrData) {
@@ -56,19 +58,19 @@ function showAPITime(arrData) {
   showGetdata();
 }
 
-async function dataExceptionHandling(fn){
+async function dataExceptionHandling(fn) {
   try {
     await fn();
-  } catch(err) {
+  } catch (err) {
     alert(err)
   }
 }
 
 async function fetchRequest(infoURL, method, body) {
-  try{
+  try {
     return await fetch(getEndpoint(infoURL), {
       method,
-      headers: {"Content-Type": "application/json"},
+      headers: { "Content-Type": "application/json" },
       body
     })
   } catch {
@@ -83,70 +85,75 @@ async function addData() {
   if (!emailCheck(email)) {
     alert('email을 형식에 맞게 입력하세요.');
   } else {
-    if (listCount.rows.length < PAGE_COUNT){
-        await fetchRequest(
-          "/accoounts",
-          'POST',
-          JSON.stringify({
-            id: Number(targetCount.value),
-            name: tragetName.value,
-            age: Number(tragetAge.value),
-            job : targetJob.value,
-            email : tragetEmail.value
-          }),
-        );
-        latestDatashow();
+    if (listCount.rows.length < PAGE_COUNT) {
+      await fetchRequest(
+        "/accoounts",
+        'POST',
+        JSON.stringify({
+          id: Number(targetCount.value),
+          name: tragetName.value,
+          age: Number(tragetAge.value),
+          job: targetJob.value,
+          email: tragetEmail.value
+        }),
+      );
+      latestDatashow();
     } else {
       alert(`회원이 ${PAGE_COUNT}명 이상입니다.`);
     }
   }
 }
 
-function entcrValueWithstyleChange(targetId){
+function entcrValueWithStyleChange(targetId) {
   const findTargetid = document.querySelector(`#data-value${targetId}`);
   const updateTr = findTargetid.parentElement;
-  const noneCorrectionbtn = updateTr.querySelector('.correction-data'); 
+  const noneCorrectionbtn = updateTr.querySelector('.correction-data');
   noneCorrectionbtn.style.display = "none"
-  noneCorrectionbtn.nextElementSibling.style.display = "block"; 
+  noneCorrectionbtn.nextElementSibling.style.display = "block";
   const updateInput = updateTr.querySelectorAll('.correction-input');
   const noneSpan = updateTr.querySelectorAll('.view-data');
   for (let i = 0; i < updateInput.length; i++) {
     noneSpan[i].style.display = "none"
     updateInput[i].style.cssText = "display : block; border: 1px solid #888; background: #fff";
-    updateInput[i].readOnly  = false;
+    updateInput[i].readOnly = false;
   }
 }
 
-async function reviseDataWithstyleChange(targetId){
-    const findTargetid = document.querySelector(`#data-value${targetId}`);
-    const updateTr = findTargetid.parentElement;
-    const noneUpdatebtn = updateTr.querySelector('.up-date');
-    const upName = updateTr.querySelector('#up-name');
-    const upAge = updateTr.querySelector('#up-age');
-    const upJob = updateTr.querySelector('#up-job');
-    const upemail = updateTr.querySelector('#up-email');
-    noneUpdatebtn.style.display = "none";
-    noneUpdatebtn.previousElementSibling.style.display = "block";
-      await fetchRequest(
-        `${"/accoounts"}/${Number(targetId)}`, "PUT",
-        JSON.stringify({
-          id: Number(targetCount.value),
-          name : upName.value,
-          age : Number(upAge.value),
-          job : upJob.value,
-          email : upemail.value
-        })
-      )
-      latestDatashow();
-      alert("수정이 완료되었습니다.");
-  }
+// updateMemember
+async function reviseDataWithstyleChange(targetId) {
+  // document.querySelector("[data-foo='1']")
+  const findTargetid = document.querySelector(`#data-value${targetId}`);
+  const updateTr = findTargetid.parentElement;
+  const noneUpdatebtn = updateTr.querySelector('.up-date');
+  const upName = updateTr.querySelector('#up-name');
+  const upAge = updateTr.querySelector('#up-age');
+  const upJob = updateTr.querySelector('#up-job');
+  const upemail = updateTr.querySelector('#up-email');
+  noneUpdatebtn.style.display = "none";
+  noneUpdatebtn.previousElementSibling.style.display = "block";
+  await fetchRequest(
+    `${"/accoounts"}/${Number(targetId)}`, "PUT",
+    JSON.stringify({
+      id: Number(targetCount.value),
+      name: upName.value,
+      age: Number(upAge.value),
+      job: upJob.value,
+      email: upemail.value
+    })
+  )
+  latestDatashow();
+  alert("수정이 완료되었습니다.");
+}
 
 async function deleteData(num) {
   delList.style.display = 'none';
-    await fetchRequest(`${"/accoounts"}/${num}`, "DELETE")
-    latestDatashow();
+  await fetchRequest(`${"/accoounts"}/${num}`, "DELETE")
+  latestDatashow();
 }
 
+function modalTemplate(){
+  
+}
 function findNamepop(targetId) {
   const delName = document.querySelector(`#data-value${targetId}`);
   const findDelname = delName.nextElementSibling.querySelector('.view-data')
@@ -155,7 +162,7 @@ function findNamepop(targetId) {
   <p>${findDelname.innerText} 님을 삭제하시겠습니까?</p>
   <div>
     <button type="button" onclick="deleteData(${targetId});" class="y-btn">예</button>
-    <button type="button" class="n-btn">아니요</button>
+    <button type="button" onclick="" class="n-btn">아니요</button>
   </div>`;
   const delPop = document.querySelector('.n-btn');
   delPop.onclick = function () {
@@ -163,24 +170,37 @@ function findNamepop(targetId) {
   }
 }
 
+async function getAccountList() {
+  const params = (searchType.value === 'age' || searchType.value === 'job')
+    ? `?${searchType.value}=${searchInput.value}`
+    : `?${searchType.value}_like=${searchInput.value}`;
+
+  const response = await fetchRequest(`/accoounts/${params}`, 'GET');
+  const accounts = await response.json();
+
+  return accounts;
+}
+
 async function importingDC() {
   if (searchType.value === '' || searchType.value === '선택') {
-    alert("분류를 선택하세요"); 
+    alert("분류를 선택하세요");
   } else {
     targetList.innerHTML = '';
-      const response = (searchType.value === 'age' || searchType.value === 'job') ? await fetchRequest(`/accoounts/?${searchType.value}=${searchInput.value}`, 'GET') : await fetchRequest(`/accoounts/?${searchType.value}_like=${searchInput.value}`, 'GET')
-      const accounts = await response.json()
-      countTable.innerHTML = listCount.rows.length;
-      showSearchResult(accounts, searchInput.value);
+    const accounts = await getAccountList();
+    showSearchResult(accounts, searchInput.value);
   }
 }
 
+// function listTemplate
+
 function showSearchResult(arrData, val) {
+  // js throw  error 
   if (arrData.length === 0) {
     throw new Error('회원이 존재하지 않습니다.');
   }
   for (let i = 0; i < arrData.length; i++) {
-    const commonTag = function(hghiName, hghiAge, hghiJob, hghiEmail) {return ` 
+    const commonTag = function (hghiName, hghiAge, hghiJob, hghiEmail) {
+      return ` 
     <tr>
       <td id="data-value${arrData[i].id}">${i + 1}</td>
       <td class="target-name${i}"><span class="view-data">${hghiName}</span><input class="correction-input" id="up-name" type="text" readonly value="${arrData[i].name}"></td>
@@ -199,20 +219,21 @@ function showSearchResult(arrData, val) {
           </div>
         </div>
       </td>
-    </tr>`;} 
+    </tr>`;
+    }
     if (searchType.value === "name") {
-      const name = arrData[i].name.replace(val,`<span style="color: blue;">${val}</span>`)
+      const name = arrData[i].name.replace(val, `<span style="color: blue;">${val}</span>`)
       targetList.innerHTML += commonTag(name, arrData[i].age, arrData[i].job, arrData[i].email)
     } else if (searchType.value === "age") {
       const stringVal = val.toString();
-      const age = arrData[i].age.toString().replace(stringVal,`<span style="color: blue;">${stringVal}</span>`)
-      targetList.innerHTML += commonTag(arrData[i].name, age, arrData[i].job, arrData[i].email) ;
-    } 
+      const age = arrData[i].age.toString().replace(stringVal, `<span style="color: blue;">${stringVal}</span>`)
+      targetList.innerHTML += commonTag(arrData[i].name, age, arrData[i].job, arrData[i].email);
+    }
     else if (searchType.value === "job") {
-      const job = arrData[i].job.replace(val,`<span style="color: blue;">${val}</span>`)
+      const job = arrData[i].job.replace(val, `<span style="color: blue;">${val}</span>`)
       targetList.innerHTML += commonTag(arrData[i].name, arrData[i].age, job, arrData[i].email);
     } else {
-      const email = arrData[i].email.replace(val,`<span style="color: blue;">${val}</span>`)
+      const email = arrData[i].email.replace(val, `<span style="color: blue;">${val}</span>`)
       targetList.innerHTML += commonTag(arrData[i].name, arrData[i].age, arrData[i].job, email)
     }
   }
@@ -221,9 +242,11 @@ function showSearchResult(arrData, val) {
 function getEndpoint(endpoint) {
   return `${END_POINT}:${PORT}${endpoint}`
 }
+const accounts = [];
 
-function showUserlistWithCount(arrData) {
-  let innerTag = '';
+function render() {
+  let documentFragment = '';
+  // document.fragment 
   for (let i = 0; i < arrData.length; i++) {
     if (arrData.length - 1 === i) {
       targetCount.value = Number(arrData[i].id) + 1;
@@ -267,4 +290,6 @@ function latestDatashow() {
   showGetdata();
 }
 
-checkTime();
+// initalize(); // 최초에 한번만 실행되는 함수 //getTime
+
+render(); // 전역 선언된  data를가지고 화면을 뿌려주는함수 
