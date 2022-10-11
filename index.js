@@ -4,7 +4,6 @@ const END_POINT = 'http://localhost'
 const PORT = 3000
 const TIME_OUT = 5000;
 const PAGE_COUNT = 15;
-
 const targetList = document.getElementById('target');
 const tragetName = document.getElementById('name');
 const targetJob = document.getElementById('job');
@@ -18,7 +17,7 @@ const searchType = document.getElementById('search-type');
 const searchInput = document.getElementById('search');
 const findOpen = document.getElementById('open-time');
 const findClose = document.getElementById('close-time');
-
+let accounts;
 
 async function fetchTimeout(resource, options = {}) {
   const { timeout = TIME_OUT } = options;
@@ -41,14 +40,14 @@ async function checkTime() {
 
 async function showGetdata() {
   const response = await fetchRequest("/accoounts", 'GET');
-  const accounts = await response.json()
-  showUserlistWithCount(accounts);
+  accounts = await response.json()
+  render(accounts);
 }
 
 
 async function getTime() {
   const response = await fetchRequest("/businessHours", 'GET');
-  const accounts = await response.json()
+  accounts = await response.json()
   showAPITime(accounts)
 }
 
@@ -162,12 +161,11 @@ function findNamepop(targetId) {
   <p>${findDelname.innerText} 님을 삭제하시겠습니까?</p>
   <div>
     <button type="button" onclick="deleteData(${targetId});" class="y-btn">예</button>
-    <button type="button" onclick="" class="n-btn">아니요</button>
+    <button type="button" onclick="modalRemove();" class="n-btn">아니요</button>
   </div>`;
-  const delPop = document.querySelector('.n-btn');
-  delPop.onclick = function () {
-    delList.style.display = 'none';
-  }
+}
+function modalRemove(){
+  delList.style.display = 'none';
 }
 
 async function getAccountList() {
@@ -176,7 +174,7 @@ async function getAccountList() {
     : `?${searchType.value}_like=${searchInput.value}`;
 
   const response = await fetchRequest(`/accoounts/${params}`, 'GET');
-  const accounts = await response.json();
+  accounts = await response.json();
 
   return accounts;
 }
@@ -186,55 +184,55 @@ async function importingDC() {
     alert("분류를 선택하세요");
   } else {
     targetList.innerHTML = '';
-    const accounts = await getAccountList();
-    showSearchResult(accounts, searchInput.value);
+    accounts = await getAccountList();
+    showSearchResult(searchInput.value);
   }
 }
 
 // function listTemplate
 
-function showSearchResult(arrData, val) {
+function showSearchResult(val) {
   // js throw  error 
-  if (arrData.length === 0) {
+  if (accounts.length === 0) {
     throw new Error('회원이 존재하지 않습니다.');
   }
-  for (let i = 0; i < arrData.length; i++) {
+  for (let i = 0; i < accounts.length; i++) {
     const commonTag = function (hghiName, hghiAge, hghiJob, hghiEmail) {
       return ` 
     <tr>
-      <td id="data-value${arrData[i].id}">${i + 1}</td>
-      <td class="target-name${i}"><span class="view-data">${hghiName}</span><input class="correction-input" id="up-name" type="text" readonly value="${arrData[i].name}"></td>
-      <td><span class="view-data">${hghiAge}</span><input class="correction-input" id="up-age" type="text" readonly value="${arrData[i].age}"></td>
-      <td><span class="view-data">${hghiJob}</span><input class="correction-input" id="up-job" type="text" readonly value="${arrData[i].job}"></td>
+      <td id="data-value${accounts[i].id}">${i + 1}</td>
+      <td class="target-name${i}"><span class="view-data">${hghiName}</span><input class="correction-input" id="up-name" type="text" readonly value="${accounts[i].name}"></td>
+      <td><span class="view-data">${hghiAge}</span><input class="correction-input" id="up-age" type="text" readonly value="${accounts[i].age}"></td>
+      <td><span class="view-data">${hghiJob}</span><input class="correction-input" id="up-job" type="text" readonly value="${accounts[i].job}"></td>
       <td>
         <div class="button-box">
           <span>
             <span class="view-data">${hghiEmail}</span>
-            <input class="correction-input" id="up-email" type="text" readonly value="${arrData[i].email}">
+            <input class="correction-input" id="up-email" type="text" readonly value="${accounts[i].email}">
           </span>
           <div>
-            <button class="correction-data" onclick="entcrValueWithstyleChange(${arrData[i].id});" type="button">수정</button>
-            <button class="up-date" onclick="reviseDataWithstyleChange(${arrData[i].id});" type="button">완료</button>
-            <button onclick="findNamepop(${arrData[i].id})" type="button" class="del-btn">삭제</button>
+            <button class="correction-data" onclick="entcrValueWithstyleChange(${accounts[i].id});" type="button">수정</button>
+            <button class="up-date" onclick="reviseDataWithstyleChange(${accounts[i].id});" type="button">완료</button>
+            <button onclick="findNamepop(${accounts[i].id})" type="button" class="del-btn">삭제</button>
           </div>
         </div>
       </td>
     </tr>`;
     }
     if (searchType.value === "name") {
-      const name = arrData[i].name.replace(val, `<span style="color: blue;">${val}</span>`)
-      targetList.innerHTML += commonTag(name, arrData[i].age, arrData[i].job, arrData[i].email)
+      const name = accounts[i].name.replace(val, `<span style="color: blue;">${val}</span>`)
+      targetList.innerHTML += commonTag(name, accounts[i].age, accounts[i].job, accounts[i].email)
     } else if (searchType.value === "age") {
       const stringVal = val.toString();
-      const age = arrData[i].age.toString().replace(stringVal, `<span style="color: blue;">${stringVal}</span>`)
-      targetList.innerHTML += commonTag(arrData[i].name, age, arrData[i].job, arrData[i].email);
+      const age = accounts[i].age.toString().replace(stringVal, `<span style="color: blue;">${stringVal}</span>`)
+      targetList.innerHTML += commonTag(accounts[i].name, age, accounts[i].job, accounts[i].email);
     }
     else if (searchType.value === "job") {
-      const job = arrData[i].job.replace(val, `<span style="color: blue;">${val}</span>`)
-      targetList.innerHTML += commonTag(arrData[i].name, arrData[i].age, job, arrData[i].email);
+      const job = accounts[i].job.replace(val, `<span style="color: blue;">${val}</span>`)
+      targetList.innerHTML += commonTag(accounts[i].name, accounts[i].age, job, accounts[i].email);
     } else {
-      const email = arrData[i].email.replace(val, `<span style="color: blue;">${val}</span>`)
-      targetList.innerHTML += commonTag(arrData[i].name, arrData[i].age, arrData[i].job, email)
+      const email = accounts[i].email.replace(val, `<span style="color: blue;">${val}</span>`)
+      targetList.innerHTML += commonTag(accounts[i].name, accounts[i].age, accounts[i].job, email)
     }
   }
   countTable.innerHTML = listCount.rows.length;
@@ -242,37 +240,36 @@ function showSearchResult(arrData, val) {
 function getEndpoint(endpoint) {
   return `${END_POINT}:${PORT}${endpoint}`
 }
-const accounts = [];
+
 
 function render() {
   let documentFragment = '';
-  // document.fragment 
-  for (let i = 0; i < arrData.length; i++) {
-    if (arrData.length - 1 === i) {
-      targetCount.value = Number(arrData[i].id) + 1;
+  for (let i = 0; i < accounts.length; i++) {
+    if (accounts.length - 1 === i) {
+      targetCount.value = Number(accounts[i].id) + 1;
     }
-    innerTag += `
+    documentFragment += `
     <tr>
-      <td id="data-value${arrData[i].id}">${i + 1}</td>
-      <td class="target-name${i}"><span class="view-data">${arrData[i].name}</span><input class="correction-input" id="up-name" type="text" readonly value="${arrData[i].name}"></td>
-      <td><span class="view-data">${arrData[i].age}</span><input class="correction-input" id="up-age" type="text" readonly value="${arrData[i].age}"></td>
-      <td><span class="view-data">${arrData[i].job}</span><input class="correction-input" id="up-job" type="text" readonly value="${arrData[i].job}"></td>
+      <td id="data-value${accounts[i].id}">${i + 1}</td>
+      <td class="target-name${i}"><span class="view-data">${accounts[i].name}</span><input class="correction-input" id="up-name" type="text" readonly value="${accounts[i].name}"></td>
+      <td><span class="view-data">${accounts[i].age}</span><input class="correction-input" id="up-age" type="text" readonly value="${accounts[i].age}"></td>
+      <td><span class="view-data">${accounts[i].job}</span><input class="correction-input" id="up-job" type="text" readonly value="${accounts[i].job}"></td>
       <td>
         <div class="button-box">
           <span>
-            <span class="view-data">${arrData[i].email}</span>
-            <input class="correction-input" id="up-email" type="text" readonly value="${arrData[i].email}">
+            <span class="view-data">${accounts[i].email}</span>
+            <input class="correction-input" id="up-email" type="text" readonly value="${accounts[i].email}">
           </span>
           <div>
-            <button class="correction-data" onclick="entcrValueWithstyleChange(${arrData[i].id});" type="button">수정</button>
-            <button class="up-date" onclick="reviseDataWithstyleChange(${arrData[i].id});" type="button">완료</button>
-            <button onclick="findNamepop(${arrData[i].id});" type="button" class="del-btn">삭제</button>
+            <button class="correction-data" onclick="entcrValueWithstyleChange(${accounts[i].id});" type="button">수정</button>
+            <button class="up-date" onclick="reviseDataWithstyleChange(${accounts[i].id});" type="button">완료</button>
+            <button onclick="findNamepop(${accounts[i].id});" type="button" class="del-btn">삭제</button>
           </div>
         </div>
       </td>
     </tr>`;
   }
-  targetList.innerHTML = innerTag;
+  targetList.innerHTML = documentFragment;
   countTable.innerHTML = listCount.rows.length;
 }
 
@@ -291,5 +288,5 @@ function latestDatashow() {
 }
 
 // initalize(); // 최초에 한번만 실행되는 함수 //getTime
-
-render(); // 전역 선언된  data를가지고 화면을 뿌려주는함수 
+checkTime();
+// render(); // 전역 선언된  data를가지고 화면을 뿌려주는함수 
