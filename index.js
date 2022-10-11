@@ -31,58 +31,52 @@ async function fetchTimeout(resource, options = {}) {
 }
 
 async function checkTime() {
-  try {
-    await fetchTimeout(getEndpoint("accoounts"), {
+    await fetchTimeout(getEndpoint("/accoounts"), {
       timeout: 2000
     });
     getTime();
-  } catch(err) {
-    alert('응답시간이 지났습니다.')
-  }
+}
+
+async function showGetdata() {
+    const response = await fetchRequest("/accoounts", 'GET');
+    const accounts = await response.json()
+    showUserlistWithCount(accounts);
 }
 
 
 async function getTime() {
-  try {
-    const response = await fetchRequest("businessHours", 'GET');
+    const response = await fetchRequest("/businessHours", 'GET');
     const accounts = await response.json()
-    viewTime(accounts);
-  } catch {
-    alert('API 요청에 실패했습니다.')
-  }
+    showAPITime(accounts)  
 }
 
-function viewTime(arrData) {
+function showAPITime(arrData) {
   findOpen.innerHTML += `${arrData.open}`
   findClose.innerHTML += `${arrData.close}`
   showGetdata();
 }
 
-async function showGetdata() {
+async function dataExceptionHandling(fn){
+  try {
+    await fn();
+  } catch(err) {
+    alert(err)
+  }
+}
+
+async function fetchRequest(infoURL, method, body) {
   try{
-    const response = await fetchRequest("accoounts", 'GET');
-    const accounts = await response.json()
-    showUserlistWithCount(accounts);
+    return await fetch(getEndpoint(infoURL), {
+      method,
+      headers: {"Content-Type": "application/json"},
+      body
+    })
   } catch {
     alert('API 요청에 실패했습니다.')
   }
 }
 
-async function requestData(fn){
-  try {
-    fn();
-    // async function fetchRequest(infoURL, method, body) {
-      await fetch(getEndpoint(infoURL), {
-        method,
-        headers: {"Content-Type": "application/json"},
-        body
-      })
-    // }
-  } catch(err) {
-    alert(err)
-  }
-}
-// requestData(showGetdata)
+
 
 async function addData() {
   const email = tragetEmail.value;
@@ -90,9 +84,8 @@ async function addData() {
     alert('email을 형식에 맞게 입력하세요.');
   } else {
     if (listCount.rows.length < PAGE_COUNT){
-      try {
         await fetchRequest(
-          "accoounts",
+          "/accoounts",
           'POST',
           JSON.stringify({
             id: Number(targetCount.value),
@@ -103,9 +96,6 @@ async function addData() {
           }),
         );
         latestDatashow();
-      } catch(err) {
-        alert(err)
-      }
     } else {
       alert(`회원이 ${PAGE_COUNT}명 이상입니다.`);
     }
@@ -137,9 +127,8 @@ async function reviseDataWithstyleChange(targetId){
     const upemail = updateTr.querySelector('#up-email');
     noneUpdatebtn.style.display = "none";
     noneUpdatebtn.previousElementSibling.style.display = "block";
-    try {
       await fetchRequest(
-        `${"accoounts"}/${Number(targetId)}`, "PUT",
+        `${"/accoounts"}/${Number(targetId)}`, "PUT",
         JSON.stringify({
           id: Number(targetCount.value),
           name : upName.value,
@@ -150,30 +139,22 @@ async function reviseDataWithstyleChange(targetId){
       )
       latestDatashow();
       alert("수정이 완료되었습니다.");
-    } catch {
-      alert('API 요청에 실패했습니다.')
-    }
   }
 
 async function deleteData(num) {
   delList.style.display = 'none';
-  try {
-    await fetchRequest(`${"accoounts"}/${num}`, "DELETE")
+    await fetchRequest(`${"/accoounts"}/${num}`, "DELETE")
     latestDatashow();
-  } catch {
-    alert("API 요청에 실패했습니다.")
-  }
 }
 
 function findNamepop(targetId) {
   const delName = document.querySelector(`#data-value${targetId}`);
   const findDelname = delName.nextElementSibling.querySelector('.view-data')
-  console.log(findDelname)
   delList.style.display = 'block';
   delList.innerHTML = `
   <p>${findDelname.innerText} 님을 삭제하시겠습니까?</p>
   <div>
-    <button type="button" onclick="deleteData(${targetId})" class="y-btn">예</button>
+    <button type="button" onclick="deleteData(${targetId});" class="y-btn">예</button>
     <button type="button" class="n-btn">아니요</button>
   </div>`;
   const delPop = document.querySelector('.n-btn');
@@ -182,19 +163,15 @@ function findNamepop(targetId) {
   }
 }
 
-async function importingDC(val) {
+async function importingDC() {
   if (searchType.value === '' || searchType.value === '선택') {
     alert("분류를 선택하세요"); 
   } else {
     targetList.innerHTML = '';
-    try {
-      const response = (searchType.value === 'age' || searchType.value === 'job') ? await fetchRequest(`accoounts/?${searchType.value}=${val}`, 'GET') : await fetchRequest(`accoounts/?${searchType.value}_like=${val}`, 'GET')
+      const response = (searchType.value === 'age' || searchType.value === 'job') ? await fetchRequest(`/accoounts/?${searchType.value}=${searchInput.value}`, 'GET') : await fetchRequest(`/accoounts/?${searchType.value}_like=${searchInput.value}`, 'GET')
       const accounts = await response.json()
-      showSearchResult(accounts, val);
-    } catch(err) {
-      alert(err);
       countTable.innerHTML = listCount.rows.length;
-    }
+      showSearchResult(accounts, searchInput.value);
   }
 }
 
@@ -218,7 +195,7 @@ function showSearchResult(arrData, val) {
           <div>
             <button class="correction-data" onclick="entcrValueWithstyleChange(${arrData[i].id});" type="button">수정</button>
             <button class="up-date" onclick="reviseDataWithstyleChange(${arrData[i].id});" type="button">완료</button>
-            <button onclick="findNamepop(${arrData[i].id});" type="button" class="del-btn">삭제</button>
+            <button onclick="findNamepop(${arrData[i].id})" type="button" class="del-btn">삭제</button>
           </div>
         </div>
       </td>
@@ -242,15 +219,7 @@ function showSearchResult(arrData, val) {
   countTable.innerHTML = listCount.rows.length;
 }
 function getEndpoint(endpoint) {
-  return `${END_POINT}:${PORT}/${endpoint}`
-}
-
-async function fetchRequest(infoURL, method, body) {
-  return await fetch(getEndpoint(infoURL), {
-    method,
-    headers: {"Content-Type": "application/json"},
-    body
-  })
+  return `${END_POINT}:${PORT}${endpoint}`
 }
 
 function showUserlistWithCount(arrData) {
