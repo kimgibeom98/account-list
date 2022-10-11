@@ -51,7 +51,7 @@
                     </tr>
                 </tbody>
             </table>
-            <button class="submit-btn" type="button" onclick="addData()">Insert</button>
+            <button class="submit-btn" type="button" onclick="addData();">Insert</button>
         </div>
         <div class="insert-info list-info">
             <div>
@@ -84,7 +84,7 @@
                     <option value="email">이메일</option>
                 </select>
                 <input type="text" id="search">
-                <button type="button" id="search-btn" onclick="importingDC(searchInput.value)">Search</button>
+                <button type="button" id="search-btn" onclick="dataExceptionHandling(importingDC)">Search</button>
                 <button type="button" id="reset-btn" onclick="latestDatashow(); searchInput.value = '';">초기화</button>
             </div>
         </div>
