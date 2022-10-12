@@ -2,7 +2,7 @@
 
 const END_POINT = 'http://localhost'
 const PORT = 3000
-const TIME_OUT = 5000;
+const TIME_OUT = 3000;
 const PAGE_COUNT = 15;
 const targetList = document.getElementById('target');
 const tragetName = document.getElementById('name');
@@ -17,7 +17,6 @@ const searchType = document.getElementById('search-type');
 const searchInput = document.getElementById('search');
 const findOpen = document.getElementById('open-time');
 const findClose = document.getElementById('close-time');
-const timeBox = document.querySelector('.time-box');
 let accounts;
 
 async function fetchRequest(infoURL, options = {}, method, body) {
@@ -39,17 +38,6 @@ async function fetchRequest(infoURL, options = {}, method, body) {
   }
 }
 
-async function checkTime() {
-  try{
-    await fetchRequest("/accoounts", {timeout: TIME_OUT});
-    getTime();
-  } catch {
-    timeBox.style.display = 'none';   
-    alert('API 요청에 실패했습니다.')
-  }
-}
-
-
 async function getTime() {
   const response = await fetchRequest("/businessHours", {timeout: TIME_OUT}, 'GET');
   accounts = await response.json()
@@ -59,6 +47,7 @@ async function getTime() {
 function showAPITime(arrData) {
   findOpen.innerHTML += `${arrData.open}`
   findClose.innerHTML += `${arrData.close}`
+  showGetdata();
 }
 
 async function showGetdata() {
@@ -281,5 +270,4 @@ function latestDatashow() {
   showGetdata();
 }
 
-checkTime();
-showGetdata();
+dataExceptionHandling(getTime);
