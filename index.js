@@ -20,23 +20,28 @@ const findClose = document.getElementById('close-time');
 const timeBox = document.querySelector('.time-box');
 let accounts;
 
-async function fetchTimeout(resource, options = {}) {
+async function fetchRequest(infoURL, options = {}, method, body) {
+  try {
     const { timeout = TIME_OUT } = options;
     const controller = new AbortController();
     const id = setTimeout(() => controller.abort(), timeout);
-    const response = await fetch(resource, {
+    const response = await fetch(getEndpoint(infoURL), {
       ...options,
-      signal: controller.signal
+      signal: controller.signal,
+      method,
+      headers: { "Content-Type": "application/json" },
+      body
     });
     clearTimeout(id);
     return response;
+  } catch {
+    alert('API 요청에 실패했습니다.')
+  }
 }
 
 async function checkTime() {
   try{
-    await fetchTimeout(getEndpoint("/accoounts"), {
-      timeout: 2000
-    });
+    await fetchRequest("/accoounts", {timeout: TIME_OUT});
     getTime();
   } catch {
     timeBox.style.display = 'none';   
@@ -44,15 +49,9 @@ async function checkTime() {
   }
 }
 
-async function showGetdata() {
-  const response = await fetchRequest("/accoounts", 'GET');
-  accounts = await response.json()
-  render();
-}
-
 
 async function getTime() {
-  const response = await fetchRequest("/businessHours", 'GET');
+  const response = await fetchRequest("/businessHours", {timeout: TIME_OUT}, 'GET');
   accounts = await response.json()
   showAPITime(accounts)
 }
@@ -60,7 +59,12 @@ async function getTime() {
 function showAPITime(arrData) {
   findOpen.innerHTML += `${arrData.open}`
   findClose.innerHTML += `${arrData.close}`
-  showGetdata();
+}
+
+async function showGetdata() {
+  const response = await fetchRequest("/accoounts", {timeout: TIME_OUT}, 'GET');
+  accounts = await response.json()
+  render();
 }
 
 async function dataExceptionHandling(fn) {
@@ -71,20 +75,6 @@ async function dataExceptionHandling(fn) {
   }
 }
 
-async function fetchRequest(infoURL, method, body) {
-  try {
-    return await fetch(getEndpoint(infoURL), {
-      method,
-      headers: { "Content-Type": "application/json" },
-      body
-    })
-  } catch {
-    alert('API 요청에 실패했습니다.')
-  }
-}
-
-
-
 async function addData() {
   const email = tragetEmail.value;
   if (!emailCheck(email)) {
@@ -93,6 +83,7 @@ async function addData() {
     if (listCount.rows.length < PAGE_COUNT) {
       await fetchRequest(
         "/accoounts",
+        {timeout: TIME_OUT},
         'POST',
         JSON.stringify({
           id: Number(targetCount.value),
@@ -135,7 +126,7 @@ async function updateMemember(targetId) {
   noneUpdatebtn.style.display = "none";
   noneUpdatebtn.previousElementSibling.style.display = "block";
   await fetchRequest(
-    `${"/accoounts"}/${Number(targetId)}`, "PUT",
+    `${"/accoounts"}/${Number(targetId)}`, {timeout: TIME_OUT}, "PUT",
     JSON.stringify({
       id: Number(targetCount.value),
       name: upName.value,
@@ -150,7 +141,7 @@ async function updateMemember(targetId) {
 
 async function deleteData(num) {
   delList.style.display = 'none';
-  await fetchRequest(`${"/accoounts"}/${num}`, "DELETE")
+  await fetchRequest(`${"/accoounts"}/${num}`, {timeout: TIME_OUT}, "DELETE")
   latestDatashow();
 }
 
@@ -179,9 +170,8 @@ async function getAccountList() {
     ? `?${searchType.value}=${searchInput.value}`
     : `?${searchType.value}_like=${searchInput.value}`;
 
-  const response = await fetchRequest(`/accoounts/${params}`, 'GET');
+  const response = await fetchRequest(`/accoounts/${params}`, {timeout: TIME_OUT}, 'GET');
   accounts = await response.json();
-
   return accounts;
 }
 
@@ -246,7 +236,6 @@ function getEndpoint(endpoint) {
   return `${END_POINT}:${PORT}${endpoint}`
 }
 
-
 function render() {
   let documentFragment = '';
   for (let i = 0; i < accounts.length; i++) {
@@ -292,6 +281,5 @@ function latestDatashow() {
   showGetdata();
 }
 
-// initalize(); // 최초에 한번만 실행되는 함수 //getTime
 checkTime();
-// render(); // 전역 선언된  data를가지고 화면을 뿌려주는함수 
+showGetdata();
