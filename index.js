@@ -17,18 +17,19 @@ const searchType = document.getElementById('search-type');
 const searchInput = document.getElementById('search');
 const findOpen = document.getElementById('open-time');
 const findClose = document.getElementById('close-time');
+const timeBox = document.querySelector('.time-box');
 let accounts;
 
 async function fetchTimeout(resource, options = {}) {
-  const { timeout = TIME_OUT } = options;
-  const controller = new AbortController();
-  const id = setTimeout(() => controller.abort(), timeout);
-  const response = await fetch(resource, {
-    ...options,
-    signal: controller.signal
-  });
-  clearTimeout(id);
-  return response;
+    const { timeout = TIME_OUT } = options;
+    const controller = new AbortController();
+    const id = setTimeout(() => controller.abort(), timeout);
+    const response = await fetch(resource, {
+      ...options,
+      signal: controller.signal
+    });
+    clearTimeout(id);
+    return response;
 }
 
 async function checkTime() {
@@ -46,7 +47,7 @@ async function checkTime() {
 async function showGetdata() {
   const response = await fetchRequest("/accoounts", 'GET');
   accounts = await response.json()
-  render(accounts);
+  render();
 }
 
 
@@ -108,14 +109,14 @@ async function addData() {
   }
 }
 
-function entcrValueWithStyleChange(targetId) {
-  const findTargetid = document.querySelector(`#data-value${targetId}`);
-  const updateTr = findTargetid.parentElement;
+function activateInput(targetId) {
+  const findDataset = document.querySelector(`[data-index="${targetId}"]`)
+  const updateTr = findDataset.parentElement;
   const noneCorrectionbtn = updateTr.querySelector('.correction-data');
-  noneCorrectionbtn.style.display = "none"
-  noneCorrectionbtn.nextElementSibling.style.display = "block";
   const updateInput = updateTr.querySelectorAll('.correction-input');
   const noneSpan = updateTr.querySelectorAll('.view-data');
+  noneCorrectionbtn.style.display = "none"
+  noneCorrectionbtn.nextElementSibling.style.display = "block";
   for (let i = 0; i < updateInput.length; i++) {
     noneSpan[i].style.display = "none"
     updateInput[i].style.cssText = "display : block; border: 1px solid #888; background: #fff";
@@ -123,11 +124,9 @@ function entcrValueWithStyleChange(targetId) {
   }
 }
 
-// updateMemember
-async function reviseDataWithstyleChange(targetId) {
-  // document.querySelector("[data-foo='1']")
-  const findTargetid = document.querySelector(`#data-value${targetId}`);
-  const updateTr = findTargetid.parentElement;
+async function updateMemember(targetId) {
+  const findDataset = document.querySelector(`[data-index="${targetId}"]`)
+  const updateTr = findDataset.parentElement;
   const noneUpdatebtn = updateTr.querySelector('.up-date');
   const upName = updateTr.querySelector('#up-name');
   const upAge = updateTr.querySelector('#up-age');
@@ -155,20 +154,22 @@ async function deleteData(num) {
   latestDatashow();
 }
 
-function modalTemplate(){
-  
-}
-function findNamepop(targetId) {
-  const delName = document.querySelector(`#data-value${targetId}`);
-  const findDelname = delName.nextElementSibling.querySelector('.view-data')
-  delList.style.display = 'block';
-  delList.innerHTML = `
+function getmodalTemplate(findDelname, targetId){
+  return  `
   <p>${findDelname.innerText} 님을 삭제하시겠습니까?</p>
   <div>
     <button type="button" onclick="deleteData(${targetId});" class="y-btn">예</button>
     <button type="button" onclick="modalRemove();" class="n-btn">아니요</button>
   </div>`;
 }
+
+function findNamemodal(targetId) {
+  const delName = document.querySelector(`[data-index="${targetId}"]`)
+  const findDelname = delName.nextElementSibling.querySelector('.view-data')
+  delList.style.display = 'block';
+  delList.innerHTML = getmodalTemplate(findDelname, targetId)
+}
+
 function modalRemove(){
   delList.style.display = 'none';
 }
@@ -184,7 +185,7 @@ async function getAccountList() {
   return accounts;
 }
 
-async function importingDC() {
+async function importDC() {
   if (searchType.value === '' || searchType.value === '선택') {
     alert("분류를 선택하세요");
   } else {
@@ -194,18 +195,16 @@ async function importingDC() {
   }
 }
 
-// function listTemplate
-
 function showSearchResult(val) {
-  // js throw  error 
   if (accounts.length === 0) {
+    countTable.innerHTML = listCount.rows.length;
     throw new Error('회원이 존재하지 않습니다.');
   }
   for (let i = 0; i < accounts.length; i++) {
-    const commonTag = function (hghiName, hghiAge, hghiJob, hghiEmail) {
+    const listTemplate = function (hghiName, hghiAge, hghiJob, hghiEmail) {
       return ` 
     <tr>
-      <td id="data-value${accounts[i].id}">${i + 1}</td>
+      <td data-index="${accounts[i].id}">${i + 1}</td>
       <td class="target-name${i}"><span class="view-data">${hghiName}</span><input class="correction-input" id="up-name" type="text" readonly value="${accounts[i].name}"></td>
       <td><span class="view-data">${hghiAge}</span><input class="correction-input" id="up-age" type="text" readonly value="${accounts[i].age}"></td>
       <td><span class="view-data">${hghiJob}</span><input class="correction-input" id="up-job" type="text" readonly value="${accounts[i].job}"></td>
@@ -216,9 +215,9 @@ function showSearchResult(val) {
             <input class="correction-input" id="up-email" type="text" readonly value="${accounts[i].email}">
           </span>
           <div>
-            <button class="correction-data" onclick="entcrValueWithstyleChange(${accounts[i].id});" type="button">수정</button>
-            <button class="up-date" onclick="reviseDataWithstyleChange(${accounts[i].id});" type="button">완료</button>
-            <button onclick="findNamepop(${accounts[i].id})" type="button" class="del-btn">삭제</button>
+            <button class="correction-data" onclick="activateInput(${accounts[i].id});" type="button">수정</button>
+            <button class="up-date" onclick="updateMemember(${accounts[i].id});" type="button">완료</button>
+            <button onclick="findNamemodal(${accounts[i].id})" type="button" class="del-btn">삭제</button>
           </div>
         </div>
       </td>
@@ -226,22 +225,23 @@ function showSearchResult(val) {
     }
     if (searchType.value === "name") {
       const name = accounts[i].name.replace(val, `<span style="color: blue;">${val}</span>`)
-      targetList.innerHTML += commonTag(name, accounts[i].age, accounts[i].job, accounts[i].email)
+      targetList.innerHTML += listTemplate(name, accounts[i].age, accounts[i].job, accounts[i].email)
     } else if (searchType.value === "age") {
       const stringVal = val.toString();
       const age = accounts[i].age.toString().replace(stringVal, `<span style="color: blue;">${stringVal}</span>`)
-      targetList.innerHTML += commonTag(accounts[i].name, age, accounts[i].job, accounts[i].email);
+      targetList.innerHTML += listTemplate(accounts[i].name, age, accounts[i].job, accounts[i].email);
     }
     else if (searchType.value === "job") {
       const job = accounts[i].job.replace(val, `<span style="color: blue;">${val}</span>`)
-      targetList.innerHTML += commonTag(accounts[i].name, accounts[i].age, job, accounts[i].email);
+      targetList.innerHTML += listTemplate(accounts[i].name, accounts[i].age, job, accounts[i].email);
     } else {
       const email = accounts[i].email.replace(val, `<span style="color: blue;">${val}</span>`)
-      targetList.innerHTML += commonTag(accounts[i].name, accounts[i].age, accounts[i].job, email)
+      targetList.innerHTML += listTemplate(accounts[i].name, accounts[i].age, accounts[i].job, email)
     }
   }
   countTable.innerHTML = listCount.rows.length;
 }
+
 function getEndpoint(endpoint) {
   return `${END_POINT}:${PORT}${endpoint}`
 }
@@ -255,7 +255,7 @@ function render() {
     }
     documentFragment += `
     <tr>
-      <td id="data-value${accounts[i].id}">${i + 1}</td>
+      <td data-index="${accounts[i].id}">${i + 1}</td>
       <td class="target-name${i}"><span class="view-data">${accounts[i].name}</span><input class="correction-input" id="up-name" type="text" readonly value="${accounts[i].name}"></td>
       <td><span class="view-data">${accounts[i].age}</span><input class="correction-input" id="up-age" type="text" readonly value="${accounts[i].age}"></td>
       <td><span class="view-data">${accounts[i].job}</span><input class="correction-input" id="up-job" type="text" readonly value="${accounts[i].job}"></td>
@@ -266,9 +266,9 @@ function render() {
             <input class="correction-input" id="up-email" type="text" readonly value="${accounts[i].email}">
           </span>
           <div>
-            <button class="correction-data" onclick="entcrValueWithstyleChange(${accounts[i].id});" type="button">수정</button>
-            <button class="up-date" onclick="reviseDataWithstyleChange(${accounts[i].id});" type="button">완료</button>
-            <button onclick="findNamepop(${accounts[i].id});" type="button" class="del-btn">삭제</button>
+            <button class="correction-data" onclick="activateInput(${accounts[i].id});" type="button">수정</button>
+            <button class="up-date" onclick="updateMemember(${accounts[i].id});" type="button">완료</button>
+            <button onclick="findNamemodal(${accounts[i].id});" type="button" class="del-btn">삭제</button>
           </div>
         </div>
       </td>
