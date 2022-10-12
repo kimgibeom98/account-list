@@ -143,7 +143,7 @@ function getmodalTemplate(findDelname, targetId){
   </div>`;
 }
 
-function findNamemodal(targetId) {
+function findNameModal(targetId) {
   const delName = document.querySelector(`[data-index="${targetId}"]`)
   const findDelname = delName.nextElementSibling.querySelector('.view-data')
   delList.style.display = 'block';
@@ -196,7 +196,7 @@ function showSearchResult(val) {
           <div>
             <button class="correction-data" onclick="activateInput(${accounts[i].id});" type="button">수정</button>
             <button class="up-date" onclick="updateMemember(${accounts[i].id});" type="button">완료</button>
-            <button onclick="findNamemodal(${accounts[i].id})" type="button" class="del-btn">삭제</button>
+            <button onclick="findNameModal(${accounts[i].id})" type="button" class="del-btn">삭제</button>
           </div>
         </div>
       </td>
@@ -246,7 +246,7 @@ function render() {
           <div>
             <button class="correction-data" onclick="activateInput(${accounts[i].id});" type="button">수정</button>
             <button class="up-date" onclick="updateMemember(${accounts[i].id});" type="button">완료</button>
-            <button onclick="findNamemodal(${accounts[i].id});" type="button" class="del-btn">삭제</button>
+            <button onclick="findNameModal(${accounts[i].id});" type="button" class="del-btn">삭제</button>
           </div>
         </div>
       </td>
