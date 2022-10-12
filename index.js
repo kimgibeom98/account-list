@@ -32,10 +32,15 @@ async function fetchTimeout(resource, options = {}) {
 }
 
 async function checkTime() {
-  await fetchTimeout(getEndpoint("/accoounts"), {
-    timeout: 2000
-  });
-  getTime();
+  try{
+    await fetchTimeout(getEndpoint("/accoounts"), {
+      timeout: 2000
+    });
+    getTime();
+  } catch {
+    timeBox.style.display = 'none';   
+    alert('API 요청에 실패했습니다.')
+  }
 }
 
 async function showGetdata() {
