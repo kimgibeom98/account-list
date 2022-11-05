@@ -39,7 +39,7 @@ async function fetchRequest(infoURL, options = {}, method, body) {
 }
 
 async function getTime() {
-  const response = await fetchRequest("/businessHours", {timeout: TIME_OUT}, 'GET');
+  const response = await fetchRequest("/businessHours", { timeout: TIME_OUT }, 'GET');
   accounts = await response.json()
   showAPITime(accounts)
 }
@@ -51,7 +51,7 @@ function showAPITime(arrData) {
 }
 
 async function showGetdata() {
-  const response = await fetchRequest("/accoounts", {timeout: TIME_OUT}, 'GET');
+  const response = await fetchRequest("/accoounts", { timeout: TIME_OUT }, 'GET');
   accounts = await response.json()
   render();
 }
@@ -72,7 +72,7 @@ async function addData() {
     if (listCount.rows.length < PAGE_COUNT) {
       await fetchRequest(
         "/accoounts",
-        {timeout: TIME_OUT},
+        { timeout: TIME_OUT },
         'POST',
         JSON.stringify({
           id: Number(targetCount.value),
@@ -115,7 +115,7 @@ async function updateMemember(targetId) {
   noneUpdatebtn.style.display = "none";
   noneUpdatebtn.previousElementSibling.style.display = "block";
   await fetchRequest(
-    `${"/accoounts"}/${Number(targetId)}`, {timeout: TIME_OUT}, "PUT",
+    `${"/accoounts"}/${Number(targetId)}`, { timeout: TIME_OUT }, "PUT",
     JSON.stringify({
       id: Number(targetCount.value),
       name: upName.value,
@@ -130,12 +130,12 @@ async function updateMemember(targetId) {
 
 async function deleteData(num) {
   delList.style.display = 'none';
-  await fetchRequest(`${"/accoounts"}/${num}`, {timeout: TIME_OUT}, "DELETE")
+  await fetchRequest(`${"/accoounts"}/${num}`, { timeout: TIME_OUT }, "DELETE")
   latestDatashow();
 }
 
-function getmodalTemplate(findDelname, targetId){
-  return  `
+function getmodalTemplate(findDelname, targetId) {
+  return `
   <p>${findDelname.innerText} 님을 삭제하시겠습니까?</p>
   <div>
     <button type="button" onclick="deleteData(${targetId});" class="y-btn">예</button>
@@ -150,7 +150,7 @@ function findNameModal(targetId) {
   delList.innerHTML = getmodalTemplate(findDelname, targetId)
 }
 
-function modalRemove(){
+function modalRemove() {
   delList.style.display = 'none';
 }
 
@@ -159,7 +159,7 @@ async function getAccountList() {
     ? `?${searchType.value}=${searchInput.value}`
     : `?${searchType.value}_like=${searchInput.value}`;
 
-  const response = await fetchRequest(`/accoounts/${params}`, {timeout: TIME_OUT}, 'GET');
+  const response = await fetchRequest(`/accoounts/${params}`, { timeout: TIME_OUT }, 'GET');
   accounts = await response.json();
   return accounts;
 }
