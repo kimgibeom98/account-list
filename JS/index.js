@@ -204,6 +204,7 @@ function showSearchResult(val) {
     }
     if (searchType.value === "name") {
       const name = accounts[i].name.replace(val, `<span style="color: blue;">${val}</span>`)
+      console.log(accounts[i].name,name);
       targetList.innerHTML += listTemplate(name, accounts[i].age, accounts[i].job, accounts[i].email)
     } else if (searchType.value === "age") {
       const stringVal = val.toString();
@@ -271,3 +272,6 @@ function latestDatashow() {
 }
 
 dataExceptionHandling(getTime);
+
+
+
