@@ -1,7 +1,7 @@
 'use strict'
 
 const END_POINT = 'http://localhost'
-const PORT = 3000
+const PORT = 3001
 const TIME_OUT = 3000;
 const PAGE_COUNT = 15;
 const targetList = document.getElementById('target');
