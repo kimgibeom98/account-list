@@ -1,0 +1,36 @@
+{
+  "accoounts": [
+    {
+      "id": 13,
+      "name": "김기범",
+      "age": 25,
+      "job": "testjob",
+      "email": "kim000183@naver.com"
+    },
+    {
+      "id": 14,
+      "name": "JS-Study",
+      "age": 23,
+      "job": "testjob",
+      "email": "kim000183@naver.com"
+    },
+    {
+      "id": 15,
+      "name": "JS-Study",
+      "age": 25,
+      "job": "testjob",
+      "email": "JS-study@naver.com"
+    },
+    {
+      "id": 16,
+      "name": "gibeom",
+      "age": 30,
+      "job": "CEO",
+      "email": "gibeom@google.co.kr"
+    }
+  ],
+  "businessHours": {
+    "open": "9:30",
+    "close": "16:30"
+  }
+}

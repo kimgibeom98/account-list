@@ -1,0 +1,24 @@
+{
+  "dependencies": {
+    "json-server": "^0.17.1"
+  },
+  "name": "account-list",
+  "description": "회원관리 기능을 구현한 미니프로젝트입니다.",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "start": "json-server --watch db.json --port 3001",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kimgibeom98/account-list.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kimgibeom98/account-list/issues"
+  },
+  "homepage": "https://github.com/kimgibeom98/account-list#readme"
+}
